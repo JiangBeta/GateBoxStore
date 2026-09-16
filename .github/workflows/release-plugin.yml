@@ -1,7 +1,8 @@
 name: release-plugin
 
 # 插件发布：tag 形如 <id>/v<semver>（例 mosdns/v0.1.0），或手动指定插件。
-# 构建 sidecar/ui/assets → 打包 tar.gz → 回填 manifest sha256/url → 发布 Release → 提交。
+# 构建 sidecar/ui/assets → 打包 → 回填 manifest sha256/url → 发布 Release；
+# 随后在 main 分支提交回填后的 manifest 与索引（tag 触发时为 detached，故拆成独立 job）。
 
 on:
   push:
@@ -17,7 +18,7 @@ permissions:
   contents: write
 
 jobs:
-  release:
+  build-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -73,11 +74,48 @@ jobs:
           files: dist/${{ steps.meta.outputs.id }}/*
           generate_release_notes: true
 
-      - name: 提交 manifest 与索引
+      - name: 上传回填后的 manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: manifest
+          path: plugins/${{ steps.meta.outputs.id }}/manifest.yaml
+
+  commit-manifest:
+    needs: build-release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    # 多个插件同时发布时串行回写 main，避免 index.json 冲突。
+    concurrency:
+      group: release-commit
+      cancel-in-progress: false
+    steps:
+      - name: 解析插件 id
+        id: meta
         run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            ID="${{ github.event.inputs.plugin }}"
+          else
+            ID="${GITHUB_REF_NAME%%/*}"
+          fi
+          echo "id=$ID" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+      - uses: actions/download-artifact@v4
+        with:
+          name: manifest
+          path: /tmp/manifest
+      - name: 应用回填并提交
+        run: |
+          cp /tmp/manifest/manifest.yaml "plugins/${{ steps.meta.outputs.id }}/manifest.yaml"
           go run ./cmd/gbx-store index
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add "plugins/${{ steps.meta.outputs.id }}/manifest.yaml" index.json
-          git diff --staged --quiet || git commit -m "chore(release): ${{ steps.meta.outputs.id }} v${{ steps.meta.outputs.version }}"
+          git diff --staged --quiet || git commit -m "chore(release): ${{ steps.meta.outputs.id }} 制品回填"
           git push
