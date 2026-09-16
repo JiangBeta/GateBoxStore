@@ -7,34 +7,36 @@ summary: 应用导航面板
 tags: [独立进程, 导航]
 channel: official
 publisher:
-  id: jiangbeta
-  name: GateBox
+    id: jiangbeta
+    name: GateBox
 requires:
-  gatebox: ">=0.4.0"
-  extensionApi: ">=1"
-  os: [linux]
+    gatebox: ">=0.4.0"
+    extensionApi: ">=1"
+    os: [linux]
 artifacts:
-  # 组件本体：flare 二进制（上游项目为 soulteary/flare；安装后落为 tools/flame/flame）。
-  - role: binary
-    os: linux
-    arch: amd64
-    url: https://github.com/soulteary/flare/releases/download/0.5.2/flare_0.5.2_linux_amd64.tar.gz
-    sha256: 1e71345d5dfef52327159adc11764443a333576a3b4d4fbe753b949fefd8ec44
-    size: 6912831
-  # 进程代管 sidecar（本仓库 plugins/flame/backend 构建）。
-  - role: sidecar
-    os: linux
-    arch: amd64
-    url: https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.0/flame-sidecar-linux-amd64.tar.gz
-    sha256: "" # TODO: 发布前回填
-  # 内嵌页（本质是 flame 自身 Web 的 iframe 宿主 + 启停控制）。
-  - role: ui
-    format: iframe
-    url: https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.0/flame-ui.tar.gz
-    sha256: "" # TODO: 发布前回填
+    # 组件本体：flare 二进制（上游项目为 soulteary/flare；安装后落为 tools/flame/flame）。
+    - role: binary
+      os: linux
+      arch: amd64
+      url: https://github.com/soulteary/flare/releases/download/0.5.2/flare_0.5.2_linux_amd64.tar.gz
+      sha256: 1e71345d5dfef52327159adc11764443a333576a3b4d4fbe753b949fefd8ec44
+      size: 6912831
+    # 进程代管 sidecar（本仓库 plugins/flame/backend 构建）。
+    - role: sidecar
+      os: linux
+      arch: amd64
+      url: https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.0/flame-sidecar-linux-amd64.tar.gz
+      sha256: a8a7daa382b42f381fbc6890079cc82c82ddccf2a9bbca676c4d1a84e05b6971 # TODO: 发布前回填
+      size: 4862826
+    # 内嵌页（本质是 flame 自身 Web 的 iframe 宿主 + 启停控制）。
+    - role: ui
+      format: iframe
+      url: https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.0/flame-ui.tar.gz
+      sha256: d09caaf00925b3def6ef7b84916b7a081b5131b4f4c70c83c5cfc089bd695acc # TODO: 发布前回填
+      size: 1847
 contributions:
-  ui:
-    nav:
-      - { path: /plugins/flame, label: Flame }
+    ui:
+        nav:
+            - {path: /plugins/flame, label: Flame}
 permissions:
-  - filesystem: { write: [tools/flame] }
+    - filesystem: {write: [tools/flame]}
