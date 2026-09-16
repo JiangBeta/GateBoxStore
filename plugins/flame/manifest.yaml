@@ -25,15 +25,15 @@ artifacts:
     - role: sidecar
       os: linux
       arch: amd64
-      url: https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.0/flame-sidecar-linux-amd64.tar.gz
-      sha256: a8a7daa382b42f381fbc6890079cc82c82ddccf2a9bbca676c4d1a84e05b6971
-      size: 4862826
+      url: https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.1/flame-sidecar-linux-amd64.tar.gz
+      sha256: f9a5f9001cc1f318154ba90b320a0fa6ffcaec738cb8473328277cbd3f8ed471
+      size: 4873968
     # 内嵌页（本质是 flame 自身 Web 的 iframe 宿主 + 启停控制）。
     - role: ui
       format: iframe
-      url: https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.0/flame-ui.tar.gz
-      sha256: d09caaf00925b3def6ef7b84916b7a081b5131b4f4c70c83c5cfc089bd695acc
-      size: 1847
+      url: https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.1/flame-ui.tar.gz
+      sha256: cc201b5f41b711cdbd26c76aec51a226246fbee798b73735c5c42ab742a6c218
+      size: 1846
 contributions:
     ui:
         nav:
