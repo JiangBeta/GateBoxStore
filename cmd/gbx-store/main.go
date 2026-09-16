@@ -49,6 +49,10 @@ func main() {
 		err = runPack(os.Args[2:])
 	case "variant-key":
 		err = runVariantKey(os.Args[2:])
+	case "keygen":
+		err = runKeygen(os.Args[2:])
+	case "sign":
+		err = runSign(os.Args[2:])
 	case "stamp":
 		err = runStamp(os.Args[2:])
 	case "-h", "--help", "help":

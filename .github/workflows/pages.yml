@@ -1,13 +1,17 @@
 name: pages
 
-# 把 index.json 发布到 GitHub Pages，供 GateBox 客户端匿名拉取。
-# 客户端默认索引地址：https://jiangbeta.github.io/GateBoxStore/index.json
+# 把 index.json（+ 签名 index.json.sig）发布到 GitHub Pages，供 GateBox 客户端匿名拉取。
+# 客户端默认索引：https://jiangbeta.github.io/GateBoxStore/index.json
+#
+# 签名：仓库 Secret `GBX_STORE_KEY`（ed25519 私钥 base64，由 `gbx-store keygen` 生成）存在时，
+# 自动对 index.json 生成 detached 签名；对应公钥需配到 GateBox 的 `catalog_pubkey`。
 
 on:
   push:
     branches: [main]
     paths:
       - index.json
+      - schema/**
   workflow_dispatch:
 
 permissions:
@@ -27,11 +31,25 @@ jobs:
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
       - name: 准备静态站点
         run: |
           mkdir -p _site
           cp index.json _site/index.json
           cp schema/*.json _site/
+      - name: 签名索引（有密钥时）
+        env:
+          GBX_STORE_KEY: ${{ secrets.GBX_STORE_KEY }}
+        run: |
+          if [ -n "$GBX_STORE_KEY" ]; then
+            printf '%s\n' "$GBX_STORE_KEY" > /tmp/catalog.key
+            go run ./cmd/gbx-store sign -in _site/index.json -key /tmp/catalog.key -out _site/index.json.sig
+            rm -f /tmp/catalog.key
+          else
+            echo "未配置 GBX_STORE_KEY，跳过签名（客户端未配 catalog_pubkey 时仍可用）"
+          fi
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

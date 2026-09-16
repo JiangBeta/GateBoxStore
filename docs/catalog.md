@@ -126,7 +126,16 @@ CI: index.yml → gbx-store index → 提交/发布 index.json（GitHub Pages）
   - 决定可用 UI 层：`community` 仅 L0/L1；`official`/`verified` 可 L2 远程 ESM。
   - 决定权限默认值：高权限需用户显式确认。
 
-## 7. 签名（预留）
+## 7. 签名（Ed25519）
 
-- 计划：minisign/cosign 对 `index.json` 与每个 Release 制品签名；`signature` 字段已保留。
-- 本阶段客户端只校验 `sha256`；签名验签在 GateBox 侧后续实现（ADR-037 §本阶段实现边界）。
+索引 `index.json` 使用 **Ed25519 detached 签名**（`index.json.sig`，base64）：
+
+```bash
+go run ./cmd/gbx-store keygen -out keys      # 生成 keys/catalog.key(私钥) 与 keys/catalog.pub(公钥)
+go run ./cmd/gbx-store sign -in index.json    # 生成 index.json.sig
+```
+
+- 私钥配到 CI Secret `GBX_STORE_KEY`（`pages.yml` 自动签名）；**私钥绝不入库**（`.gitignore` 已忽略 `keys/`、`*.key`）。
+- 公钥配到 GateBox 的 `catalog_pubkey`（base64）；配置后客户端**强制验签**，签名缺失或错误即拒绝加载索引。
+- 未配置公钥时客户端不验签（开发/内网场景），但仍校验每个制品的 `sha256`。
+- 制品级签名仍预留（`signature` 字段）；当前以索引签名 + `sha256` 为安全边界。

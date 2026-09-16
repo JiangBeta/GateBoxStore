@@ -17,3 +17,8 @@ plugins/*/ui/.vite/
 
 # 本地编译产生的二进制
 plugins/*/backend/backend
+
+# 发布者私钥（绝不提交）
+keys/
+*.key
+catalog.key
