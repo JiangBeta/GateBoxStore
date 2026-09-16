@@ -25,9 +25,9 @@ artifacts:
     - role: sidecar
       os: linux
       arch: amd64
-      url: https://github.com/JiangBeta/GateBoxStore/releases/download/ddns-go/v0.1.0/ddns-go-sidecar-linux-amd64.tar.gz
-      sha256: 26717eafd089ec01ed0ee0e240ef90dd0b8e726f8c5969756ddc5f0174e250ff
-      size: 5680944
+      url: https://github.com/JiangBeta/GateBoxStore/releases/download/ddns-go/v0.1.1/ddns-go-sidecar-linux-amd64.tar.gz
+      sha256: 477e302863e9bba298c82f249035bcfd67a579d32bf892307ee31dfa500dcafc
+      size: 5691165
 contributions:
     # 消费型插件：订阅 domains 投影，自行拉取并收敛（ADR-036 §6）。
     data:

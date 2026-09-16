@@ -1,7 +1,7 @@
 {
   "schema": "gatebox.catalog/v1",
   "extensionApi": 1,
-  "generatedAt": "2026-09-16T13:31:34Z",
+  "generatedAt": "2026-09-16T13:31:48Z",
   "publisher": {
     "id": "jiangbeta",
     "name": "GateBox"
@@ -13,7 +13,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T13:31:34Z",
+          "publishedAt": "2026-09-16T13:31:48Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -100,7 +100,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T13:31:34Z",
+          "publishedAt": "2026-09-16T13:31:48Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -164,7 +164,7 @@
         {
           "version": "0.1.1",
           "channel": "official",
-          "publishedAt": "2026-09-16T13:31:34Z",
+          "publishedAt": "2026-09-16T13:31:48Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -181,9 +181,9 @@
                 "arch": "amd64",
                 "os": "linux",
                 "role": "sidecar",
-                "sha256": "26717eafd089ec01ed0ee0e240ef90dd0b8e726f8c5969756ddc5f0174e250ff",
-                "size": 5680944,
-                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/ddns-go/v0.1.0/ddns-go-sidecar-linux-amd64.tar.gz"
+                "sha256": "477e302863e9bba298c82f249035bcfd67a579d32bf892307ee31dfa500dcafc",
+                "size": 5691165,
+                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/ddns-go/v0.1.1/ddns-go-sidecar-linux-amd64.tar.gz"
               }
             ],
             "channel": "official",
@@ -251,9 +251,9 @@
               "arch": "amd64",
               "os": "linux",
               "role": "sidecar",
-              "sha256": "26717eafd089ec01ed0ee0e240ef90dd0b8e726f8c5969756ddc5f0174e250ff",
-              "size": 5680944,
-              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/ddns-go/v0.1.0/ddns-go-sidecar-linux-amd64.tar.gz"
+              "sha256": "477e302863e9bba298c82f249035bcfd67a579d32bf892307ee31dfa500dcafc",
+              "size": 5691165,
+              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/ddns-go/v0.1.1/ddns-go-sidecar-linux-amd64.tar.gz"
             }
           ]
         }
@@ -265,7 +265,7 @@
         {
           "version": "0.1.1",
           "channel": "official",
-          "publishedAt": "2026-09-16T13:31:34Z",
+          "publishedAt": "2026-09-16T13:31:48Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -369,7 +369,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T13:31:34Z",
+          "publishedAt": "2026-09-16T13:31:48Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -426,7 +426,7 @@
         {
           "version": "0.1.1",
           "channel": "official",
-          "publishedAt": "2026-09-16T13:31:34Z",
+          "publishedAt": "2026-09-16T13:31:48Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -535,7 +535,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T13:31:34Z",
+          "publishedAt": "2026-09-16T13:31:48Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
