@@ -44,6 +44,20 @@ GateBoxStore/
 4. 本地生成索引预览：`go run ./cmd/gbx-store index`；
 5. 提交 PR。合并后 CI 构建制品、发布 Release、更新 `index.json`。
 
+## 构建与发布
+
+```bash
+scripts/build-plugin.sh <id>          # 构建 sidecar/ui/assets → dist/<id>/
+go run ./cmd/gbx-store stamp \
+  -plugin plugins/<id> -dist dist/<id> \
+  -base-url https://github.com/JiangBeta/GateBoxStore/releases/download/<id>/v<ver>
+go run ./cmd/gbx-store index          # 重新生成 index.json
+```
+
+- `build-plugin.sh`：Go sidecar（`backend/`）+ Vite UI（`ui/`）或静态 UI + `assets/`。
+- `stamp`：按 role 约定名字回填 `artifacts[].url/sha256/size`（保留 manifest 注释）。
+- 打 tag `<id>/v<semver>` 后，CI（`release-plugin.yml`）自动构建 → 回填 → 发布 Release → 提交索引。
+
 ## 文档
 
 - [插件作者指南](docs/plugin-authoring.md)

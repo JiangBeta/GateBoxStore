@@ -49,6 +49,8 @@ func main() {
 		err = runPack(os.Args[2:])
 	case "variant-key":
 		err = runVariantKey(os.Args[2:])
+	case "stamp":
+		err = runStamp(os.Args[2:])
 	case "-h", "--help", "help":
 		usage()
 		return

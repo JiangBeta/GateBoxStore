@@ -20,7 +20,11 @@ GateBox 的**官方插件仓库 + 静态索引**。两个核心产物：
 ```bash
 go run ./cmd/gbx-store index          # 扫描 plugins/*/manifest.yaml 生成 index.json
 go run ./cmd/gbx-store index -check    # 仅校验 schema，不写文件
-go run ./cmd/gbx-store pack -dir plugins/<id> -out dist/   # 打包插件为 tar.gz 并计算 sha256
+go run ./cmd/gbx-store pack -dir plugins/<id> -out dist/   # 打包插件目录为 tar.gz 并计算 sha256
+scripts/build-plugin.sh <id>           # 构建插件的 sidecar/ui/assets 制品 → dist/<id>/
+go run ./cmd/gbx-store stamp -plugin plugins/<id> -dist dist/<id> -base-url <releaseURL>
+                                       # 回填 artifacts[].url/sha256/size（保留注释，不手改）
+go run ./cmd/gbx-store variant-key -component caddy -version 2.10.0 -os linux -arch amd64 -features a,b
 
 go build ./...                         # 编译工具
 go vet ./...                           # 静态检查

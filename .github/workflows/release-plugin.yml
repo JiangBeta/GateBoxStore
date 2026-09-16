@@ -1,8 +1,7 @@
 name: release-plugin
 
-# 插件发布：tag 形如 <id>/v<semver>，例如 caddy-l4/v0.1.0。
-# 构建 sidecar（Go）/ ui（pnpm）/ assets，打包 tar.gz 并发布到 GitHub Release，
-# 最后重新生成 index.json 并提交回 main。
+# 插件发布：tag 形如 <id>/v<semver>（例 mosdns/v0.1.0），或手动指定插件。
+# 构建 sidecar/ui/assets → 打包 tar.gz → 回填 manifest sha256/url → 发布 Release → 提交。
 
 on:
   push:
@@ -14,11 +13,12 @@ on:
         description: "插件 id"
         required: true
 
+permissions:
+  contents: write
+
 jobs:
   release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -27,52 +27,57 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
 
       - name: 解析插件 id 与版本
         id: meta
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             ID="${{ github.event.inputs.plugin }}"
-            VER=$(yq -r '.version' "plugins/$ID/manifest.yaml" 2>/dev/null || awk '/^version:/{print $2}' "plugins/$ID/manifest.yaml")
           else
             ID="${GITHUB_REF_NAME%%/*}"
-            VER="${GITHUB_REF_NAME##*/v}"
           fi
+          VER=$(awk '/^version:/{print $2; exit}' "plugins/$ID/manifest.yaml")
           echo "id=$ID" >> "$GITHUB_OUTPUT"
           echo "version=$VER" >> "$GITHUB_OUTPUT"
 
-      - name: 构建 sidecar（如存在）
-        if: hashFiles(format('plugins/{0}/backend/go.mod', steps.meta.outputs.id)) != ''
+      - name: 校验与测试
         run: |
-          cd "plugins/${{ steps.meta.outputs.id }}/backend"
-          GOOS=linux GOARCH=amd64 go build -o "../../../dist/sidecar" ./...
+          go run ./cmd/gbx-store index -check
+          test -z "$(gofmt -l ./cmd)"
+          go vet ./...
+          if [ -f "plugins/${{ steps.meta.outputs.id }}/backend/go.mod" ]; then
+            (cd "plugins/${{ steps.meta.outputs.id }}/backend" && go vet ./... && go test ./...)
+          fi
 
-      - name: 构建 UI（如存在）
-        if: hashFiles(format('plugins/{0}/ui/package.json', steps.meta.outputs.id)) != ''
-        run: |
-          cd "plugins/${{ steps.meta.outputs.id }}/ui"
-          pnpm install --frozen-lockfile
-          pnpm build
+      - name: 构建制品
+        run: scripts/build-plugin.sh "${{ steps.meta.outputs.id }}"
 
-      - name: 打包并计算 sha256
+      - name: 回填 manifest（url + sha256 + size）
         run: |
-          mkdir -p dist
-          go run ./cmd/gbx-store pack -dir "plugins/${{ steps.meta.outputs.id }}" -out dist
-        # 注：真实构建应分别打包 sidecar / ui / assets，并把 sha256 回填 manifest 的 artifacts[]
+          BASE="https://github.com/${{ github.repository }}/releases/download/${{ steps.meta.outputs.id }}/v${{ steps.meta.outputs.version }}"
+          go run ./cmd/gbx-store stamp \
+            -plugin "plugins/${{ steps.meta.outputs.id }}" \
+            -dist "dist/${{ steps.meta.outputs.id }}" \
+            -base-url "$BASE"
+
+      - name: 校验回填后 manifest
+        run: go run ./cmd/gbx-store index -check
 
       - name: 发布 Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          files: dist/*
+          tag_name: "${{ steps.meta.outputs.id }}/v${{ steps.meta.outputs.version }}"
+          files: dist/${{ steps.meta.outputs.id }}/*
           generate_release_notes: true
 
-      - name: 重新生成索引
-        run: go run ./cmd/gbx-store index
-      - name: 提交 index.json
+      - name: 提交 manifest 与索引
         run: |
+          go run ./cmd/gbx-store index
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.json
-          git diff --staged --quiet || git commit -m "chore(index): 更新 ${{ steps.meta.outputs.id }} v${{ steps.meta.outputs.version }}"
+          git add "plugins/${{ steps.meta.outputs.id }}/manifest.yaml" index.json
+          git diff --staged --quiet || git commit -m "chore(release): ${{ steps.meta.outputs.id }} v${{ steps.meta.outputs.version }}"
           git push
