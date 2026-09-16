@@ -1,0 +1,19 @@
+# 核心组件配方变体清单（ADR-038）
+#
+# 核心插件扩展（kind: caddy-module）不发布整包二进制，只声明中性特征；
+# 本仓库 CI 用 xcaddy 按「特征并集」构建变体，把 url/sha256 回填到此处，
+# 再由 `gbx-store index` 写入 index.json 的 variants[]。
+#
+# key 缺省时由 gbx-store 按算法补全；算法见 docs/catalog.md §3（与 GateBox 内核一致）。
+#
+# 示例（取消注释并回填真实值）：
+# variants:
+#   - component: caddy
+#     version: "2.10.0"
+#     features: ["github.com/mholt/caddy-l4"]
+#     os: linux
+#     arch: amd64
+#     url: https://github.com/JiangBeta/GateBoxStore/releases/download/variants/caddy-2.10.0-l4-linux-amd64.tar.gz
+#     sha256: ""
+
+variants: []

@@ -1,0 +1,85 @@
+name: build-variant
+
+# 构建核心组件配方变体（ADR-038）：按「特征并集」用 xcaddy 构建，产物发布到 Release，
+# 并把 url/sha256 回填 variants.yaml 后重新生成 index.json。
+#
+# 触发方式：手动（workflow_dispatch）或由 GateBox 客户端「按需构建」入口触发。
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "组件版本，如 2.10.0"
+        required: true
+      features:
+        description: "逗号分隔的中性特征（Go 模块路径），空 = 纯核心"
+        required: false
+        default: ""
+      os:
+        default: linux
+      arch:
+        default: amd64
+
+jobs:
+  variant:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+      - name: 安装 xcaddy
+        run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+
+      - name: 构建变体
+        id: build
+        run: |
+          KEY=$(go run ./cmd/gbx-store variant-key \
+            -component caddy -version "${{ inputs.version }}" \
+            -os "${{ inputs.os }}" -arch "${{ inputs.arch }}" \
+            -features "${{ inputs.features }}")
+          echo "key=$KEY" >> "$GITHUB_OUTPUT"
+
+          WITH=()
+          IFS=',' read -r -a arr <<< "${{ inputs.features }}"
+          for f in "${arr[@]}"; do [ -n "$f" ] && WITH+=(--with "$f"); done
+          GOOS="${{ inputs.os }}" GOARCH="${{ inputs.arch }}" \
+            xcaddy build "v${{ inputs.version }}" "${WITH[@]}" --output dist/caddy
+
+          LABEL="${KEY#sha256:}"
+          NAME="caddy-${{ inputs.version }}-${LABEL}-${{ inputs.os }}-${{ inputs.arch }}"
+          mkdir -p dist
+          tar -czf "dist/${NAME}.tar.gz" -C dist caddy
+          SHA=$(sha256sum "dist/${NAME}.tar.gz" | awk '{print $1}')
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+
+      - name: 发布变体 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: variants/${{ steps.build.outputs.name }}
+          files: dist/${{ steps.build.outputs.name }}.tar.gz
+
+      - name: 回填 variants.yaml
+        run: |
+          cat >> variants.yaml <<EOF
+          # 由 CI 回填（${{ github.run_id }}）
+          # - component: caddy
+          #   version: "${{ inputs.version }}"
+          #   features: [${{ inputs.features }}]
+          #   os: ${{ inputs.os }}
+          #   arch: ${{ inputs.arch }}
+          #   url: https://github.com/${{ github.repository }}/releases/download/variants/${{ steps.build.outputs.name }}.tar.gz
+          #   sha256: "${{ steps.build.outputs.sha }}"
+          EOF
+          # 真实实现应在 variants: 列表下追加条目；此处保留人工确认后提交。
+          go run ./cmd/gbx-store index
+      - name: 提交索引
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.json variants.yaml
+          git diff --staged --quiet || git commit -m "chore(variant): caddy ${{ inputs.version }} ${{ steps.build.outputs.key }}"
+          git push

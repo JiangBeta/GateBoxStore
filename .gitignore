@@ -1,0 +1,11 @@
+# 构建产物
+dist/
+*.tar.gz
+
+# 本地二进制
+/gbx-store
+
+# 编辑器
+.DS_Store
+.idea/
+.vscode/

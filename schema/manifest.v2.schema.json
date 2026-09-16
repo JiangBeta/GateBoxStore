@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gatebox.dev/schema/manifest.v2.json",
+  "title": "GateBox Plugin Manifest v2",
+  "description": "插件声明（数据驱动 + 贡献注册）。设计见 docs/adr/ADR-036 ~ ADR-039。权威定义在 GateBox 主仓库；GateBoxStore vendor 一份并在 CI 校验一致。",
+  "type": "object",
+  "required": ["apiVersion", "kind", "id", "name", "version"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "gatebox/v2" },
+    "kind": { "enum": ["caddy-module", "process", "config-only"] },
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,31}$" },
+    "name": { "type": "string" },
+    "version": { "type": "string" },
+    "summary": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "channel": { "enum": ["official", "custom", "system", "stable", "beta"] },
+    "publisher": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "keyID": { "type": "string" }
+      }
+    },
+    "requires": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "gatebox": { "type": "string" },
+        "extensionApi": { "type": "string" },
+        "components": { "type": "array", "items": { "type": "string" } },
+        "os": { "type": "array", "items": { "type": "string" } },
+        "arch": { "type": "array", "items": { "enum": ["amd64", "arm64", "arm", "386"] } }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role", "url"],
+        "additionalProperties": false,
+        "properties": {
+          "role": { "enum": ["binary", "sidecar", "ui", "assets"] },
+          "os": { "type": "string" },
+          "arch": { "type": "string" },
+          "url": { "type": "string" },
+          "sha256": { "type": "string" },
+          "size": { "type": "integer" },
+          "format": { "enum": ["esm", "iframe", "tarball", "zip"] },
+          "entry": { "type": "string" },
+          "install": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "to": { "type": "string" },
+              "mode": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "contributions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["point"],
+            "additionalProperties": false,
+            "properties": {
+              "point": { "enum": ["proxy-protocols", "validator", "component-variant", "dns-provider"] },
+              "data": { "type": "object" }
+            }
+          }
+        },
+        "backend": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["point"],
+            "additionalProperties": false,
+            "properties": {
+              "point": { "enum": ["renderer", "config-sync", "reconcile"] },
+              "for": { "type": "string" },
+              "scope": { "enum": ["global", "site"] },
+              "projection": { "type": "string" },
+              "target": { "type": "string" },
+              "entry": { "type": "string" },
+              "interval": { "type": "string" },
+              "impl": {
+                "type": "object",
+                "additionalProperties": { "type": "string" }
+              }
+            }
+          }
+        },
+        "ui": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "nav": { "$ref": "#/$defs/navList" },
+            "routes": { "$ref": "#/$defs/navList" },
+            "slots": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["slot"],
+                "additionalProperties": false,
+                "properties": {
+                  "slot": { "type": "string" },
+                  "from": { "type": "string" }
+                }
+              }
+            },
+            "page": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            }
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "subscribe": {
+              "type": "array",
+              "items": { "enum": ["domains", "certs", "ports", "services"] }
+            }
+          }
+        }
+      }
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "filesystem": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "network": { "type": "array", "items": { "type": "string" } },
+          "api": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "navList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "label"],
+        "additionalProperties": false,
+        "properties": {
+          "path": { "type": "string" },
+          "label": { "type": "string" },
+          "icon": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+# GateBoxStore 开发工具链(mise 管理)
+#
+# 本仓库只需 Go。用法:`mise install`,之后 `go` 直接可用。
+
+[tools]
+go = "1.26"
+
+[env]
+CGO_ENABLED = "0"
+
+[tasks.check]
+description = "校验 manifest 与索引（不写文件）"
+run = "go run ./cmd/gbx-store index -check"
+
+[tasks.index]
+description = "生成 index.json"
+run = "go run ./cmd/gbx-store index"
+
+[tasks.lint]
+description = "静态检查（vet + gofmt）"
+run = "go vet ./... && test -z \"$(gofmt -l ./cmd)\""

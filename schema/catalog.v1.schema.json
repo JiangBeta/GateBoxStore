@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gatebox.dev/schema/catalog.v1.json",
+  "title": "GateBox Plugin Catalog v1",
+  "description": "插件与配方变体的静态索引（index.json）。设计见 docs/adr/ADR-037（分发）与 ADR-038（配方变体）。权威定义在本仓库，GateBoxStore vendor 一份并在 CI 校验一致。",
+  "type": "object",
+  "required": ["schema", "plugins"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "gatebox.catalog/v1" },
+    "extensionApi": {
+      "type": "integer",
+      "description": "索引整体面向的扩展 API 版本；客户端据此过滤不兼容条目。"
+    },
+    "generatedAt": { "type": "string" },
+    "publisher": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "keyID": { "type": "string" }
+      }
+    },
+    "plugins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "versions"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,31}$" },
+          "versions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["version", "channel", "publishedAt", "manifest"],
+              "additionalProperties": false,
+              "properties": {
+                "version": { "type": "string" },
+                "channel": { "enum": ["official", "custom", "system", "stable", "beta"] },
+                "publishedAt": { "type": "string" },
+                "extensionApi": { "type": "integer" },
+                "manifest": { "$ref": "https://gatebox.dev/schema/manifest.v2.json" },
+                "artifacts": {
+                  "type": "array",
+                  "items": { "$ref": "#/$defs/artifact" }
+                },
+                "signature": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "variants": {
+      "type": "array",
+      "description": "核心组件配方变体（ADR-038）。key = hash(component, version, os/arch, sorted(features))。",
+      "items": {
+        "type": "object",
+        "required": ["key", "component", "version", "features", "os", "arch", "url"],
+        "additionalProperties": false,
+        "properties": {
+          "key": { "type": "string" },
+          "component": { "type": "string" },
+          "version": { "type": "string" },
+          "features": { "type": "array", "items": { "type": "string" } },
+          "os": { "type": "string" },
+          "arch": { "enum": ["amd64", "arm64", "arm", "386"] },
+          "url": { "type": "string" },
+          "sha256": { "type": "string" },
+          "size": { "type": "integer" },
+          "publishedAt": { "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "required": ["role", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "role": { "enum": ["binary", "sidecar", "ui", "assets"] },
+        "os": { "type": "string" },
+        "arch": { "enum": ["amd64", "arm64", "arm", "386"] },
+        "url": { "type": "string" },
+        "sha256": { "type": "string" },
+        "size": { "type": "integer" },
+        "format": { "enum": ["esm", "iframe", "tarball", "zip"] },
+        "entry": { "type": "string" },
+        "install": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "to": { "type": "string" },
+            "mode": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

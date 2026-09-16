@@ -1,0 +1,98 @@
+{
+  "schema": "gatebox.catalog/v1",
+  "extensionApi": 1,
+  "generatedAt": "2026-09-16T02:23:46Z",
+  "publisher": {
+    "id": "jiangbeta",
+    "name": "GateBox"
+  },
+  "plugins": [
+    {
+      "id": "caddy-l4",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "channel": "official",
+          "publishedAt": "2026-09-16T02:23:46Z",
+          "extensionApi": 1,
+          "manifest": {
+            "apiVersion": "gatebox/v2",
+            "channel": "official",
+            "contributions": {
+              "backend": [
+                {
+                  "for": "non-http",
+                  "impl": {
+                    "template": "layer4 {\n{{- range .Rules }}\n{{- $r := . }}\n{{- range $r.Nets }}\n{{- $net := . }}\n{{- range $r.Ports }}\n\t{{ $net }}/:{{ . }} {\n\t\troute {\n\t\t\tproxy {{ $net }}/{{ $r.Upstream }}\n\t\t}\n\t}\n{{- end }}\n{{- end }}\n{{- end }}\n}\n",
+                    "type": "template"
+                  },
+                  "point": "renderer",
+                  "scope": "global"
+                }
+              ],
+              "capabilities": [
+                {
+                  "data": {
+                    "component": "caddy",
+                    "feature": "github.com/mholt/caddy-l4"
+                  },
+                  "point": "component-variant"
+                },
+                {
+                  "data": {
+                    "class": "non-http",
+                    "label": "TCP/UDP",
+                    "networks": [
+                      "tcp",
+                      "udp"
+                    ],
+                    "requiresPrimaryDomain": false
+                  },
+                  "point": "proxy-protocols"
+                }
+              ],
+              "ui": {
+                "page": {
+                  "type": "settings"
+                },
+                "slots": [
+                  {
+                    "from": "proxy-protocols",
+                    "slot": "port-form.protocol-options"
+                  }
+                ]
+              }
+            },
+            "id": "caddy-l4",
+            "kind": "caddy-module",
+            "name": "Caddy L4",
+            "permissions": [
+              {
+                "api": [
+                  "gateway:read"
+                ]
+              }
+            ],
+            "publisher": {
+              "id": "jiangbeta",
+              "name": "GateBox"
+            },
+            "requires": {
+              "components": [
+                "caddy"
+              ],
+              "extensionApi": "\u003e=1",
+              "gatebox": "\u003e=0.4.0"
+            },
+            "summary": "为 Caddy 增加 TCP/UDP（L4）代理能力",
+            "tags": [
+              "Caddy插件",
+              "TCP/UDP"
+            ],
+            "version": "0.1.0"
+          }
+        }
+      ]
+    }
+  ]
+}

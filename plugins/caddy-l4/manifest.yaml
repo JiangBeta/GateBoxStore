@@ -1,0 +1,59 @@
+apiVersion: gatebox/v2
+kind: caddy-module
+id: caddy-l4
+name: Caddy L4
+version: 0.1.0
+summary: 为 Caddy 增加 TCP/UDP（L4）代理能力
+tags: [Caddy插件, TCP/UDP]
+channel: official
+publisher:
+  id: jiangbeta
+  name: GateBox
+requires:
+  gatebox: ">=0.4.0"
+  extensionApi: ">=1"
+  components: [caddy]
+# 核心插件扩展：只声明中性特征，不携带整包二进制。
+# 含该特征的 Caddy 变体由 GateBoxStore CI（xcaddy）按特征并集构建（ADR-038）。
+contributions:
+  capabilities:
+    - point: component-variant
+      data:
+        component: caddy
+        feature: github.com/mholt/caddy-l4
+    - point: proxy-protocols
+      data:
+        class: non-http
+        label: TCP/UDP
+        networks: [tcp, udp]
+        requiresPrimaryDomain: false
+  backend:
+    - point: renderer
+      for: non-http
+      scope: global
+      impl:
+        type: template
+        template: |
+          layer4 {
+          {{- range .Rules }}
+          {{- $r := . }}
+          {{- range $r.Nets }}
+          {{- $net := . }}
+          {{- range $r.Ports }}
+          	{{ $net }}/:{{ . }} {
+          		route {
+          			proxy {{ $net }}/{{ $r.Upstream }}
+          		}
+          	}
+          {{- end }}
+          {{- end }}
+          {{- end }}
+          }
+  ui:
+    slots:
+      - slot: port-form.protocol-options
+        from: proxy-protocols
+    page:
+      type: settings
+permissions:
+  - api: [gateway:read]

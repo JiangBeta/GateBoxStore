@@ -1,0 +1,40 @@
+name: pages
+
+# 把 index.json 发布到 GitHub Pages，供 GateBox 客户端匿名拉取。
+# 客户端默认索引地址：https://jiangbeta.github.io/GateBoxStore/index.json
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - index.json
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: 准备静态站点
+        run: |
+          mkdir -p _site
+          cp index.json _site/index.json
+          cp schema/*.json _site/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4

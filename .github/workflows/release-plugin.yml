@@ -1,0 +1,78 @@
+name: release-plugin
+
+# 插件发布：tag 形如 <id>/v<semver>，例如 caddy-l4/v0.1.0。
+# 构建 sidecar（Go）/ ui（pnpm）/ assets，打包 tar.gz 并发布到 GitHub Release，
+# 最后重新生成 index.json 并提交回 main。
+
+on:
+  push:
+    tags:
+      - "*/v*"
+  workflow_dispatch:
+    inputs:
+      plugin:
+        description: "插件 id"
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - name: 解析插件 id 与版本
+        id: meta
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            ID="${{ github.event.inputs.plugin }}"
+            VER=$(yq -r '.version' "plugins/$ID/manifest.yaml" 2>/dev/null || awk '/^version:/{print $2}' "plugins/$ID/manifest.yaml")
+          else
+            ID="${GITHUB_REF_NAME%%/*}"
+            VER="${GITHUB_REF_NAME##*/v}"
+          fi
+          echo "id=$ID" >> "$GITHUB_OUTPUT"
+          echo "version=$VER" >> "$GITHUB_OUTPUT"
+
+      - name: 构建 sidecar（如存在）
+        if: hashFiles(format('plugins/{0}/backend/go.mod', steps.meta.outputs.id)) != ''
+        run: |
+          cd "plugins/${{ steps.meta.outputs.id }}/backend"
+          GOOS=linux GOARCH=amd64 go build -o "../../../dist/sidecar" ./...
+
+      - name: 构建 UI（如存在）
+        if: hashFiles(format('plugins/{0}/ui/package.json', steps.meta.outputs.id)) != ''
+        run: |
+          cd "plugins/${{ steps.meta.outputs.id }}/ui"
+          pnpm install --frozen-lockfile
+          pnpm build
+
+      - name: 打包并计算 sha256
+        run: |
+          mkdir -p dist
+          go run ./cmd/gbx-store pack -dir "plugins/${{ steps.meta.outputs.id }}" -out dist
+        # 注：真实构建应分别打包 sidecar / ui / assets，并把 sha256 回填 manifest 的 artifacts[]
+
+      - name: 发布 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: dist/*
+          generate_release_notes: true
+
+      - name: 重新生成索引
+        run: go run ./cmd/gbx-store index
+      - name: 提交 index.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.json
+          git diff --staged --quiet || git commit -m "chore(index): 更新 ${{ steps.meta.outputs.id }} v${{ steps.meta.outputs.version }}"
+          git push

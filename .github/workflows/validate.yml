@@ -1,0 +1,41 @@
+name: validate
+
+# PR / push 时校验所有 manifest 与索引。插件制品的发布见 release.yml。
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths:
+      - "plugins/**"
+      - "variants.yaml"
+      - "schema/**"
+      - "cmd/**"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+      - name: 校验 manifest 与索引
+        run: go run ./cmd/gbx-store index -check
+      - name: gofmt / vet
+        run: |
+          test -z "$(gofmt -l ./cmd)"
+          go vet ./...
+
+  schema-check:
+    # 校验 vendor 的 schema 与 GateBox 主仓库一致（权威在主仓库）。
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 拉取主仓库 schema
+        run: |
+          git clone --depth 1 https://github.com/JiangBeta/gatebox /tmp/gatebox
+      - name: 比对
+        run: |
+          diff -u /tmp/gatebox/plugins/schema/manifest.v2.schema.json schema/manifest.v2.schema.json
+          diff -u /tmp/gatebox/registry/schema/catalog.v1.schema.json schema/catalog.v1.schema.json
