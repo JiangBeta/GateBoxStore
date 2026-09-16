@@ -35,7 +35,10 @@ jobs:
   variant:
     runs-on: ubuntu-latest
     steps:
+      # tag 触发时为 detached HEAD；登记提交需要 main，故显式检出 main。
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-go@v5
         with:
           go-version: "1.26"
