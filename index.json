@@ -1,7 +1,7 @@
 {
   "schema": "gatebox.catalog/v1",
   "extensionApi": 1,
-  "generatedAt": "2026-09-16T14:02:49Z",
+  "generatedAt": "2026-09-16T14:07:24Z",
   "publisher": {
     "id": "jiangbeta",
     "name": "GateBox"
@@ -13,7 +13,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:02:49Z",
+          "publishedAt": "2026-09-16T14:07:24Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -100,7 +100,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:02:49Z",
+          "publishedAt": "2026-09-16T14:07:24Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -164,7 +164,7 @@
         {
           "version": "0.1.4",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:02:49Z",
+          "publishedAt": "2026-09-16T14:07:24Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -295,9 +295,9 @@
       "id": "flame",
       "versions": [
         {
-          "version": "0.1.4",
+          "version": "0.1.5",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:02:49Z",
+          "publishedAt": "2026-09-16T14:07:24Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -381,7 +381,7 @@
               "独立进程",
               "导航"
             ],
-            "version": "0.1.4"
+            "version": "0.1.5"
           },
           "artifacts": [
             {
@@ -433,7 +433,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:02:49Z",
+          "publishedAt": "2026-09-16T14:07:24Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -488,9 +488,9 @@
       "id": "mosdns",
       "versions": [
         {
-          "version": "0.1.4",
+          "version": "0.1.5",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:02:49Z",
+          "publishedAt": "2026-09-16T14:07:24Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -579,7 +579,7 @@
               "独立进程",
               "DNS"
             ],
-            "version": "0.1.4"
+            "version": "0.1.5"
           },
           "artifacts": [
             {
@@ -631,7 +631,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:02:49Z",
+          "publishedAt": "2026-09-16T14:07:24Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",

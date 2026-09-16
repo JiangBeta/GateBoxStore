@@ -34,16 +34,16 @@ if [ "${SKIP_UI:-0}" = "1" ]; then
 elif [ -f "$ROOT/plugins/$ID/ui/package.json" ]; then
   echo "== 构建 ui: $ID =="
   (cd "$ROOT/plugins/$ID/ui" && pnpm install --frozen-lockfile && pnpm build)
-  tar_det "$OUT/$ID-ui.tar.gz" "$ROOT/plugins/$ID/ui/dist"
+  tar_det "$OUT/$ID-ui.tar.gz" "$ROOT/plugins/$ID/ui/dist" .
 elif [ -d "$ROOT/plugins/$ID/ui" ]; then
   echo "== 打包静态 ui: $ID =="
-  tar_det "$OUT/$ID-ui.tar.gz" "$ROOT/plugins/$ID/ui"
+  tar_det "$OUT/$ID-ui.tar.gz" "$ROOT/plugins/$ID/ui" .
 fi
 
 # assets（静态资源）
 if [ -d "$ROOT/plugins/$ID/assets" ]; then
   echo "== 打包 assets: $ID =="
-  tar_det "$OUT/$ID-assets.tar.gz" "$ROOT/plugins/$ID/assets"
+  tar_det "$OUT/$ID-assets.tar.gz" "$ROOT/plugins/$ID/assets" .
 fi
 
 echo "== $ID 制品 =="
