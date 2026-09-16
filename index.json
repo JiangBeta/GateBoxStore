@@ -1,7 +1,7 @@
 {
   "schema": "gatebox.catalog/v1",
   "extensionApi": 1,
-  "generatedAt": "2026-09-16T03:38:05Z",
+  "generatedAt": "2026-09-16T03:45:56Z",
   "publisher": {
     "id": "jiangbeta",
     "name": "GateBox"
@@ -13,7 +13,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:38:05Z",
+          "publishedAt": "2026-09-16T03:45:56Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -100,7 +100,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:38:05Z",
+          "publishedAt": "2026-09-16T03:45:56Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -159,12 +159,109 @@
       ]
     },
     {
+      "id": "ddns-go",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "channel": "official",
+          "publishedAt": "2026-09-16T03:45:56Z",
+          "extensionApi": 1,
+          "manifest": {
+            "apiVersion": "gatebox/v2",
+            "artifacts": [
+              {
+                "arch": "amd64",
+                "os": "linux",
+                "role": "binary",
+                "sha256": "",
+                "url": "https://github.com/jeessy2/ddns-go/releases/download/v6.9.0/ddns-go_6.9.0_linux_x86_64.tar.gz"
+              },
+              {
+                "arch": "amd64",
+                "os": "linux",
+                "role": "sidecar",
+                "sha256": "",
+                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/ddns-go/v0.1.0/ddns-go-sidecar-linux-amd64.tar.gz"
+              }
+            ],
+            "channel": "official",
+            "contributions": {
+              "backend": [
+                {
+                  "entry": "ddns-go-sidecar",
+                  "interval": "5m",
+                  "point": "reconcile",
+                  "projection": "domains"
+                }
+              ],
+              "data": {
+                "subscribe": [
+                  "domains"
+                ]
+              }
+            },
+            "id": "ddns-go",
+            "kind": "process",
+            "name": "ddns-go",
+            "permissions": [
+              {
+                "filesystem": {
+                  "write": [
+                    "tools/ddnsgo"
+                  ]
+                }
+              },
+              {
+                "api": [
+                  "domain:read",
+                  "credentials:read"
+                ]
+              }
+            ],
+            "publisher": {
+              "id": "jiangbeta",
+              "name": "GateBox"
+            },
+            "requires": {
+              "extensionApi": "\u003e=1",
+              "gatebox": "\u003e=0.4.0",
+              "os": [
+                "linux"
+              ]
+            },
+            "summary": "动态 DNS，把域名解析到本机公网 IP",
+            "tags": [
+              "独立进程",
+              "DNS"
+            ],
+            "version": "0.1.0"
+          },
+          "artifacts": [
+            {
+              "arch": "amd64",
+              "os": "linux",
+              "role": "binary",
+              "sha256": "",
+              "url": "https://github.com/jeessy2/ddns-go/releases/download/v6.9.0/ddns-go_6.9.0_linux_x86_64.tar.gz"
+            },
+            {
+              "arch": "amd64",
+              "os": "linux",
+              "role": "sidecar",
+              "sha256": "",
+              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/ddns-go/v0.1.0/ddns-go-sidecar-linux-amd64.tar.gz"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "geoip",
       "versions": [
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:38:05Z",
+          "publishedAt": "2026-09-16T03:45:56Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -221,7 +318,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:38:05Z",
+          "publishedAt": "2026-09-16T03:45:56Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -324,7 +421,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:38:05Z",
+          "publishedAt": "2026-09-16T03:45:56Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
