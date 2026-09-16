@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flame</title>
+    <style>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      #bar { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid #f0f0f0; }
+      #bar .state { font-size: 13px; color: #666; margin-right: auto; }
+      #bar .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #bbb; margin-right: 6px; vertical-align: middle; }
+      #bar .dot.running { background: #52c41a; }
+      #bar .dot.stopped { background: #d9d9d9; }
+      button { border: 1px solid #d9d9d9; background: #fff; border-radius: 6px; padding: 4px 12px; cursor: pointer; font-size: 13px; }
+      button.primary { border-color: #1677ff; color: #1677ff; }
+      button:disabled { opacity: .5; cursor: not-allowed; }
+      #frame { width: 100%; height: calc(100% - 45px); border: 0; display: block; }
+      #empty { display: none; padding: 40px; text-align: center; color: #999; }
+    </style>
+  </head>
+  <body>
+    <div id="bar">
+      <span class="state"><span class="dot" id="dot"></span><span id="text">加载中…</span></span>
+      <button id="start" class="primary">启动</button>
+      <button id="stop">停止</button>
+      <button id="restart">重启</button>
+      <button id="open">新窗口打开</button>
+    </div>
+    <div id="empty">flame 未运行。点击「启动」。</div>
+    <iframe id="frame" style="display: none"></iframe>
+
+    <script>
+      const API = '/api/v1/plugins/flame'
+      let token = ''
+      let port = 5005
+
+      async function initToken() {
+        try {
+          const r = await fetch(`/api/v1/plugins/flame/token`)
+          if (r.ok) token = (await r.json()).token || ''
+        } catch {}
+        window.addEventListener('message', (e) => {
+          if (e.data?.type === 'init' && e.data.token) token = e.data.token
+        })
+        window.parent?.postMessage({ type: 'ready' }, '*')
+        window.parent?.postMessage({ type: 'setTitle', title: 'Flame' }, '*')
+      }
+
+      async function api(path, method = 'GET') {
+        const r = await fetch(API + path, { method, headers: { 'X-Plugin-Token': token } })
+        if (!r.ok) throw new Error(`HTTP ${r.status}`)
+        return r.json()
+      }
+
+      function render(st) {
+        const running = st.state === 'running'
+        document.getElementById('dot').className = 'dot ' + st.state
+        document.getElementById('text').textContent =
+          !st.installed ? '未安装 flame 制品' : running ? `运行中（端口 ${st.port}）` : '已停止'
+        document.getElementById('start').disabled = running || !st.installed
+        document.getElementById('stop').disabled = !running
+        document.getElementById('restart').disabled = !running
+        const frame = document.getElementById('frame')
+        const empty = document.getElementById('empty')
+        if (running) {
+          const url = `http://${location.hostname}:${st.port}/`
+          frame.src = url
+          frame.style.display = 'block'
+          empty.style.display = 'none'
+          document.getElementById('open').onclick = () => window.open(url, '_blank')
+        } else {
+          frame.style.display = 'none'
+          empty.style.display = 'block'
+        }
+        reportHeight()
+      }
+
+      function reportHeight() {
+        window.parent?.postMessage({ type: 'resize', height: document.documentElement.scrollHeight }, '*')
+      }
+
+      async function load() {
+        try { render(await api('/status')) } catch (e) { document.getElementById('text').textContent = String(e) }
+      }
+
+      document.getElementById('start').onclick = async () => { try { render(await api('/start', 'POST')) } catch (e) { alert(e) } }
+      document.getElementById('stop').onclick = async () => { try { render(await api('/stop', 'POST')) } catch (e) { alert(e) } }
+      document.getElementById('restart').onclick = async () => { try { render(await api('/restart', 'POST')) } catch (e) { alert(e) } }
+
+      initToken().then(load)
+    </script>
+  </body>
+</html>

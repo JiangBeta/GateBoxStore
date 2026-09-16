@@ -1,7 +1,7 @@
 {
   "schema": "gatebox.catalog/v1",
   "extensionApi": 1,
-  "generatedAt": "2026-09-16T03:45:56Z",
+  "generatedAt": "2026-09-16T03:48:01Z",
   "publisher": {
     "id": "jiangbeta",
     "name": "GateBox"
@@ -13,7 +13,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:45:56Z",
+          "publishedAt": "2026-09-16T03:48:01Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -100,7 +100,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:45:56Z",
+          "publishedAt": "2026-09-16T03:48:01Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -164,7 +164,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:45:56Z",
+          "publishedAt": "2026-09-16T03:48:01Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -256,12 +256,110 @@
       ]
     },
     {
+      "id": "flame",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "channel": "official",
+          "publishedAt": "2026-09-16T03:48:01Z",
+          "extensionApi": 1,
+          "manifest": {
+            "apiVersion": "gatebox/v2",
+            "artifacts": [
+              {
+                "arch": "amd64",
+                "os": "linux",
+                "role": "binary",
+                "sha256": "",
+                "url": "https://github.com/xiangsx/flame/releases/download/v1.0.0/flame-linux-amd64"
+              },
+              {
+                "arch": "amd64",
+                "os": "linux",
+                "role": "sidecar",
+                "sha256": "",
+                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.0/flame-sidecar-linux-amd64.tar.gz"
+              },
+              {
+                "format": "iframe",
+                "role": "ui",
+                "sha256": "",
+                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.0/flame-ui.tar.gz"
+              }
+            ],
+            "channel": "official",
+            "contributions": {
+              "ui": {
+                "nav": [
+                  {
+                    "label": "Flame",
+                    "path": "/plugins/flame"
+                  }
+                ]
+              }
+            },
+            "id": "flame",
+            "kind": "process",
+            "name": "Flame",
+            "permissions": [
+              {
+                "filesystem": {
+                  "write": [
+                    "tools/flame"
+                  ]
+                }
+              }
+            ],
+            "publisher": {
+              "id": "jiangbeta",
+              "name": "GateBox"
+            },
+            "requires": {
+              "extensionApi": "\u003e=1",
+              "gatebox": "\u003e=0.4.0",
+              "os": [
+                "linux"
+              ]
+            },
+            "summary": "应用导航面板",
+            "tags": [
+              "独立进程",
+              "导航"
+            ],
+            "version": "0.1.0"
+          },
+          "artifacts": [
+            {
+              "arch": "amd64",
+              "os": "linux",
+              "role": "binary",
+              "sha256": "",
+              "url": "https://github.com/xiangsx/flame/releases/download/v1.0.0/flame-linux-amd64"
+            },
+            {
+              "arch": "amd64",
+              "os": "linux",
+              "role": "sidecar",
+              "sha256": "",
+              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.0/flame-sidecar-linux-amd64.tar.gz"
+            },
+            {
+              "format": "iframe",
+              "role": "ui",
+              "sha256": "",
+              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.0/flame-ui.tar.gz"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "geoip",
       "versions": [
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:45:56Z",
+          "publishedAt": "2026-09-16T03:48:01Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -318,7 +416,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:45:56Z",
+          "publishedAt": "2026-09-16T03:48:01Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -421,7 +519,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:45:56Z",
+          "publishedAt": "2026-09-16T03:48:01Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",

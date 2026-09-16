@@ -1,0 +1,39 @@
+apiVersion: gatebox/v2
+kind: process
+id: flame
+name: Flame
+version: 0.1.0
+summary: 应用导航面板
+tags: [独立进程, 导航]
+channel: official
+publisher:
+  id: jiangbeta
+  name: GateBox
+requires:
+  gatebox: ">=0.4.0"
+  extensionApi: ">=1"
+  os: [linux]
+artifacts:
+  # 组件本体：flame 二进制（由插件 sidecar 代管进程）。
+  - role: binary
+    os: linux
+    arch: amd64
+    url: https://github.com/xiangsx/flame/releases/download/v1.0.0/flame-linux-amd64
+    sha256: "" # TODO: 发布前回填
+  # 进程代管 sidecar（本仓库 plugins/flame/backend 构建）。
+  - role: sidecar
+    os: linux
+    arch: amd64
+    url: https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.0/flame-sidecar-linux-amd64.tar.gz
+    sha256: "" # TODO: 发布前回填
+  # 内嵌页（本质是 flame 自身 Web 的 iframe 宿主 + 启停控制）。
+  - role: ui
+    format: iframe
+    url: https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.0/flame-ui.tar.gz
+    sha256: "" # TODO: 发布前回填
+contributions:
+  ui:
+    nav:
+      - { path: /plugins/flame, label: Flame }
+permissions:
+  - filesystem: { write: [tools/flame] }
