@@ -5,6 +5,11 @@ dist/
 # 本地二进制
 /gbx-store
 
+# 插件子工程依赖与产物
+plugins/*/ui/node_modules/
+plugins/*/ui/dist/
+plugins/*/ui/.vite/
+
 # 编辑器
 .DS_Store
 .idea/

@@ -1,0 +1,40 @@
+apiVersion: gatebox/v2
+kind: process
+id: mosdns
+name: MosDNS
+version: 0.1.0
+summary: 内网 DNS 解析与分流（独立后端 + 独立管理页）
+tags: [独立进程, DNS]
+channel: official
+publisher:
+  id: jiangbeta
+  name: GateBox
+requires:
+  gatebox: ">=0.4.0"
+  extensionApi: ">=1"
+  os: [linux]
+artifacts:
+  # 插件提供的组件本体：mosdns 二进制（由插件 sidecar 代管进程，ADR-037 决策 (a)）。
+  - role: binary
+    os: linux
+    arch: amd64
+    url: https://github.com/IrineSistiana/mosdns/releases/download/v5.3.3/mosdns-linux-amd64.zip
+    sha256: "" # TODO: 发布前回填（安装时校验）
+  # 管理逻辑侧车（本仓库 plugins/mosdns/backend 构建）。
+  - role: sidecar
+    os: linux
+    arch: amd64
+    url: https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.0/mosdns-sidecar-linux-amd64.tar.gz
+    sha256: "" # TODO: 发布前回填
+  # 管理页（本仓库 plugins/mosdns/ui 构建，L1 iframe）。
+  - role: ui
+    format: iframe
+    url: https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.0/mosdns-ui.tar.gz
+    sha256: "" # TODO: 发布前回填
+contributions:
+  ui:
+    nav:
+      - { path: /plugins/mosdns, label: MosDNS }
+permissions:
+  - filesystem: { write: [tools/mosdns] }
+  - api: [domain:read]

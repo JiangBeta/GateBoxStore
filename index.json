@@ -1,7 +1,7 @@
 {
   "schema": "gatebox.catalog/v1",
   "extensionApi": 1,
-  "generatedAt": "2026-09-16T02:31:51Z",
+  "generatedAt": "2026-09-16T03:38:05Z",
   "publisher": {
     "id": "jiangbeta",
     "name": "GateBox"
@@ -13,7 +13,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T02:31:51Z",
+          "publishedAt": "2026-09-16T03:38:05Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -100,7 +100,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T02:31:51Z",
+          "publishedAt": "2026-09-16T03:38:05Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -164,7 +164,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T02:31:51Z",
+          "publishedAt": "2026-09-16T03:38:05Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -216,12 +216,115 @@
       ]
     },
     {
+      "id": "mosdns",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "channel": "official",
+          "publishedAt": "2026-09-16T03:38:05Z",
+          "extensionApi": 1,
+          "manifest": {
+            "apiVersion": "gatebox/v2",
+            "artifacts": [
+              {
+                "arch": "amd64",
+                "os": "linux",
+                "role": "binary",
+                "sha256": "",
+                "url": "https://github.com/IrineSistiana/mosdns/releases/download/v5.3.3/mosdns-linux-amd64.zip"
+              },
+              {
+                "arch": "amd64",
+                "os": "linux",
+                "role": "sidecar",
+                "sha256": "",
+                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.0/mosdns-sidecar-linux-amd64.tar.gz"
+              },
+              {
+                "format": "iframe",
+                "role": "ui",
+                "sha256": "",
+                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.0/mosdns-ui.tar.gz"
+              }
+            ],
+            "channel": "official",
+            "contributions": {
+              "ui": {
+                "nav": [
+                  {
+                    "label": "MosDNS",
+                    "path": "/plugins/mosdns"
+                  }
+                ]
+              }
+            },
+            "id": "mosdns",
+            "kind": "process",
+            "name": "MosDNS",
+            "permissions": [
+              {
+                "filesystem": {
+                  "write": [
+                    "tools/mosdns"
+                  ]
+                }
+              },
+              {
+                "api": [
+                  "domain:read"
+                ]
+              }
+            ],
+            "publisher": {
+              "id": "jiangbeta",
+              "name": "GateBox"
+            },
+            "requires": {
+              "extensionApi": "\u003e=1",
+              "gatebox": "\u003e=0.4.0",
+              "os": [
+                "linux"
+              ]
+            },
+            "summary": "内网 DNS 解析与分流（独立后端 + 独立管理页）",
+            "tags": [
+              "独立进程",
+              "DNS"
+            ],
+            "version": "0.1.0"
+          },
+          "artifacts": [
+            {
+              "arch": "amd64",
+              "os": "linux",
+              "role": "binary",
+              "sha256": "",
+              "url": "https://github.com/IrineSistiana/mosdns/releases/download/v5.3.3/mosdns-linux-amd64.zip"
+            },
+            {
+              "arch": "amd64",
+              "os": "linux",
+              "role": "sidecar",
+              "sha256": "",
+              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.0/mosdns-sidecar-linux-amd64.tar.gz"
+            },
+            {
+              "format": "iframe",
+              "role": "ui",
+              "sha256": "",
+              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.0/mosdns-ui.tar.gz"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "realip",
       "versions": [
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T02:31:51Z",
+          "publishedAt": "2026-09-16T03:38:05Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",

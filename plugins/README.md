@@ -17,11 +17,11 @@ plugins/<id>/
 
 | 插件 | kind | 路径 | 状态 |
 |---|---|---|---|
-| `caddy-l4` | caddy-module | 核心插件扩展（配方变体） | 参考样例已建，待迁完整贡献 |
-| `mosdns` | process | 独立进程（sidecar + L1 UI） | 待迁 |
-| `dns-cloudflare` / `dns-dnspod` / `dns-aliyun` | config-only | `dns-provider` | 待迁（内核 5 处硬编码收敛） |
+| `mosdns` | process | 独立进程（sidecar + L1 UI） | **已迁移**（后端/管理页/本体均在此） |
+| `caddy-l4` | caddy-module | 核心插件扩展（配方变体） | 清单已建 |
+| `coraza` / `geoip` / `realip` | caddy-module / config-only | 声明式贡献 | 清单已建 |
 | `ddns-go` | process | config-sync 投影契约 | 待迁 |
-| `flame` / `tailscale` / `coraza` / `geoip` / `realip` | 混合 | — | 待评估 |
+| `flame` / `tailscale` | process | 导航/组网 | 待迁 |
 
 ## 约定
 
