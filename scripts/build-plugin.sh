@@ -20,8 +20,10 @@ if [ -f "$ROOT/plugins/$ID/backend/go.mod" ]; then
   rm -f "$OUT/$ID-sidecar"
 fi
 
-# ui（Vite 工程 → dist；或纯静态目录直接打包）
-if [ -f "$ROOT/plugins/$ID/ui/package.json" ]; then
+# ui（Vite 工程 → dist；或纯静态目录直接打包）。ui 与架构无关，多架构构建时可用 SKIP_UI=1 跳过。
+if [ "${SKIP_UI:-0}" = "1" ]; then
+  echo "== 跳过 ui（SKIP_UI=1）=="
+elif [ -f "$ROOT/plugins/$ID/ui/package.json" ]; then
   echo "== 构建 ui: $ID =="
   (cd "$ROOT/plugins/$ID/ui" && pnpm install --frozen-lockfile && pnpm build)
   tar -czf "$OUT/$ID-ui.tar.gz" -C "$ROOT/plugins/$ID/ui/dist" .

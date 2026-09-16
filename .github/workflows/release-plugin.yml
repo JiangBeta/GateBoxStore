@@ -53,8 +53,10 @@ jobs:
             (cd "plugins/${{ steps.meta.outputs.id }}/backend" && go vet ./... && go test ./...)
           fi
 
-      - name: 构建制品
-        run: scripts/build-plugin.sh "${{ steps.meta.outputs.id }}"
+      - name: 构建制品（amd64 + arm64；ui 仅一次）
+        run: |
+          OS=linux ARCH=amd64 scripts/build-plugin.sh "${{ steps.meta.outputs.id }}"
+          OS=linux ARCH=arm64 SKIP_UI=1 scripts/build-plugin.sh "${{ steps.meta.outputs.id }}"
 
       - name: 回填 manifest（url + sha256 + size）
         run: |
@@ -85,10 +87,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    # 多个插件同时发布时串行回写 main，避免 index.json 冲突。
-    concurrency:
-      group: release-commit
-      cancel-in-progress: false
     steps:
       - name: 解析插件 id
         id: meta
@@ -110,12 +108,18 @@ jobs:
         with:
           name: manifest
           path: /tmp/manifest
-      - name: 应用回填并提交
+      - name: 应用回填并提交（拉取重试，避免并发冲突）
         run: |
           cp /tmp/manifest/manifest.yaml "plugins/${{ steps.meta.outputs.id }}/manifest.yaml"
-          go run ./cmd/gbx-store index
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add "plugins/${{ steps.meta.outputs.id }}/manifest.yaml" index.json
-          git diff --staged --quiet || git commit -m "chore(release): ${{ steps.meta.outputs.id }} 制品回填"
-          git push
+          for i in 1 2 3 4 5; do
+            go run ./cmd/gbx-store index
+            git add "plugins/${{ steps.meta.outputs.id }}/manifest.yaml" index.json
+            git diff --staged --quiet || git commit -m "chore(release): ${{ steps.meta.outputs.id }} 制品回填"
+            if git push; then echo "pushed"; exit 0; fi
+            echo "push 失败，拉取后重试 ($i)"; git pull --rebase --autostash -q origin main
+            cp /tmp/manifest/manifest.yaml "plugins/${{ steps.meta.outputs.id }}/manifest.yaml"
+            sleep 3
+          done
+          echo "多次重试仍失败"; exit 1
