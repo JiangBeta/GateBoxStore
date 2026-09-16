@@ -3,6 +3,8 @@ name: sign-index
 # 索引发布：index.json 直接经 raw.githubusercontent 提供（无需 Pages/服务端）。
 # 配置 Secret `GBX_STORE_KEY`（ed25519 私钥 base64）时，本工作流生成 detached 签名
 # index.json.sig 并提交；对应公钥配到 GateBox 的 `catalog_pubkey` 后强制验签。
+#
+# 每次运行都会写 `.github/sign-status.json`（是否检测到密钥/是否签名），便于排查 Secret 配置问题。
 
 on:
   push:
@@ -22,25 +24,30 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: "1.26"
+
       - name: 签名 index.json
         env:
           GBX_STORE_KEY: ${{ secrets.GBX_STORE_KEY }}
         run: |
+          mkdir -p .github
           if [ -z "$GBX_STORE_KEY" ]; then
-            echo "未配置 GBX_STORE_KEY，跳过签名（客户端未配 catalog_pubkey 时仍可用）"
-            exit 0
+            printf '{"secretPresent":false,"signed":false,"at":"%s","hint":"未检测到 GBX_STORE_KEY：请确认在 Store 仓库的 Actions Secrets（非 Variables/Environment）中创建"}\n' \
+              "$(date -u +%FT%TZ)" > .github/sign-status.json
+            echo "未配置 GBX_STORE_KEY，跳过签名" | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            printf '%s\n' "$GBX_STORE_KEY" > /tmp/catalog.key
+            go run ./cmd/gbx-store sign -in index.json -key /tmp/catalog.key -out index.json.sig
+            rm -f /tmp/catalog.key
+            printf '{"secretPresent":true,"signed":true,"at":"%s","keyLen":%d}\n' \
+              "$(date -u +%FT%TZ)" "${#GBX_STORE_KEY}" > .github/sign-status.json
+            echo "已签名 index.json 并提交 index.json.sig" | tee -a "$GITHUB_STEP_SUMMARY"
           fi
-          printf '%s\n' "$GBX_STORE_KEY" > /tmp/catalog.key
-          go run ./cmd/gbx-store sign -in index.json -key /tmp/catalog.key -out index.json.sig
-          rm -f /tmp/catalog.key
-      - name: 提交签名
+
+      - name: 提交签名与状态
         run: |
-          if [ ! -f index.json.sig ]; then
-            echo "无签名可提交"
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.json.sig
+          git add .github/sign-status.json
+          [ -f index.json.sig ] && git add index.json.sig
           git diff --staged --quiet || git commit -m "chore(index): 更新索引签名"
           git push
