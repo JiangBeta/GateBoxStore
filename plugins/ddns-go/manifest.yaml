@@ -2,7 +2,7 @@ apiVersion: gatebox/v2
 kind: process
 id: ddns-go
 name: ddns-go
-version: 0.1.0
+version: 0.1.1
 summary: 动态 DNS，把域名解析到本机公网 IP
 tags: [独立进程, DNS]
 channel: official

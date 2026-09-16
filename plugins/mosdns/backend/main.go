@@ -19,6 +19,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"os/signal"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -79,6 +80,18 @@ func main() {
 
 	addr := "127.0.0.1:" + port
 	log.Printf("mosdns 插件后端启动: %s, 运行目录 %s", addr, dir)
+
+	// 收到信号（GateBox 停止本 sidecar）时，先停 mosdns 本体再退出，
+	// 否则本体会因 setsid 独立会话而成为孤儿。
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		<-sigCh
+		log.Printf("收到退出信号：停止 mosdns 本体")
+		_ = h.sup.stop()
+		os.Exit(0)
+	}()
+
 	srv := &http.Server{Addr: addr, Handler: withToken(token, mux), ReadHeaderTimeout: 10 * time.Second}
 	if err := srv.ListenAndServe(); err != nil {
 		log.Fatalf("服务启动失败: %v", err)

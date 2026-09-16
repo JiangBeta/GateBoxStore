@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"os/signal"
 	"path/filepath"
 	"sort"
 	"strconv"
@@ -60,6 +61,16 @@ func main() {
 
 	addr := "127.0.0.1:" + port
 	log.Printf("ddns-go 插件后端启动: %s, 运行目录 %s", addr, dir)
+	// 收到信号时先停 ddns-go 本体再退出，避免孤儿进程。
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		<-sigCh
+		log.Printf("收到退出信号：停止 ddns-go 本体")
+		_ = s.sup.stop()
+		os.Exit(0)
+	}()
+
 	srv := &http.Server{Addr: addr, Handler: withToken(token, mux), ReadHeaderTimeout: 10 * time.Second}
 	if err := srv.ListenAndServe(); err != nil {
 		log.Fatalf("服务启动失败: %v", err)

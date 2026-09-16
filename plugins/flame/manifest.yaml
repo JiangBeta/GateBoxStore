@@ -2,7 +2,7 @@ apiVersion: gatebox/v2
 kind: process
 id: flame
 name: Flame
-version: 0.1.0
+version: 0.1.1
 summary: 应用导航面板
 tags: [独立进程, 导航]
 channel: official
