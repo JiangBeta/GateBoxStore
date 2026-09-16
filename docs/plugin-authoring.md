@@ -102,6 +102,21 @@ permissions:
 - `ui`（`format: iframe`）安装到 `$DATA_DIR/tools/<id>/ui`，内核托管于 `/plugins/<id>/`。
 - 前端只通过同源 API 与 [postMessage 桥](plugin-ui.md) 与宿主交互。
 
+### 5.1 sidecar 运行时契约（ADR-039）
+
+内核启动 sidecar 时注入环境变量：
+
+| 环境变量 | 说明 |
+|---|---|
+| `GATEBOX_PLUGIN_ID` | 插件 id |
+| `GATEBOX_PLUGIN_PORT` | 后端应监听的 `127.0.0.1` 端口 |
+| `GATEBOX_PLUGIN_TOKEN` | plugin token；调用核心投影 API 时携带 |
+| `GATEBOX_DATA_DIR` | 运行时数据根目录（插件目录为 `<DATA_DIR>/tools/<id>`） |
+
+- 内核把 `/api/v1/plugins/<id>/*` 反代到 `127.0.0.1:$GATEBOX_PLUGIN_PORT`，并校验请求头 `X-Plugin-Token`（或查询参数 `token`）等于 plugin token。
+- 前端 iframe 经 `init` 消息拿到 token，业务请求带 `X-Plugin-Token`；**同源**，无需 CORS。
+- 挂载点为插件目录（`cwd`），日志写入 `<DATA_DIR>/tools/<id>/<id>.log`。
+
 ## 6. 示例：纯声明式扩展（dns-provider）
 
 ```yaml
