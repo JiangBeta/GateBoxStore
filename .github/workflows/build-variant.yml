@@ -1,85 +1,136 @@
 name: build-variant
 
-# 构建核心组件配方变体（ADR-038）：按「特征并集」用 xcaddy 构建，产物发布到 Release，
-# 并把 url/sha256 回填 variants.yaml 后重新生成 index.json。
+# 构建核心组件配方变体（ADR-038）：按「特征并集」用 xcaddy 构建，发布到 Release，
+# 并登记进 variants.yaml、重新生成索引。
 #
-# 触发方式：手动（workflow_dispatch）或由 GateBox 客户端「按需构建」入口触发。
+# 触发：
+#   - 手动 workflow_dispatch（version/features）
+#   - 推送 tag：variants/<component>/v<version>/<short-features>
+#     例：variants/caddy/v2.11.4/l4          （仅 caddy-l4）
+#         variants/caddy/v2.11.4/l4-coraza   （l4 + coraza）
+#         variants/caddy/v2.11.4/core        （纯核心，无特征）
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: "组件版本，如 2.10.0"
+        description: "组件版本（不带 v，如 2.11.4）"
         required: true
       features:
-        description: "逗号分隔的中性特征（Go 模块路径），空 = 纯核心"
+        description: "短特征名，逗号分隔（l4,coraza；空=core）"
         required: false
         default: ""
       os:
         default: linux
       arch:
         default: amd64
+  push:
+    tags:
+      - "variants/*"
+
+permissions:
+  contents: write
 
 jobs:
   variant:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version: "1.26"
-      - name: 安装 xcaddy
-        run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
 
-      - name: 构建变体
+      - name: 解析参数并映射特征
+        id: meta
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            COMPONENT="caddy"
+            VERSION="${{ inputs.version }}"
+            SHORT="${{ inputs.features }}"
+            OS="${{ inputs.os }}"
+            ARCH="${{ inputs.arch }}"
+          else
+            # tag: variants/<component>/v<version>/<short>
+            IFS='/' read -r _ COMPONENT VTAG SHORT <<< "${GITHUB_REF_NAME}"
+            VERSION="${VTAG#v}"
+            OS="linux"; ARCH="amd64"
+          fi
+          if [ "$COMPONENT" != "caddy" ]; then echo "暂仅支持 caddy"; exit 1; fi
+          [ "$SHORT" = "core" ] && SHORT=""
+
+          FEATURES=""
+          WITH=()
+          IFS='-' read -r -a parts <<< "$SHORT"
+          for s in "${parts[@]}"; do
+            case "$s" in
+              "") ;;
+              l4)     m="github.com/mholt/caddy-l4" ;;
+              coraza) m="github.com/corazawaf/coraza-caddy/v2" ;;
+              *) echo "未知短特征: $s"; exit 1 ;;
+            esac
+            FEATURES="${FEATURES:+$FEATURES,}$m"
+            WITH+=(--with "$m")
+          done
+          echo "component=$COMPONENT" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "short=$SHORT" >> "$GITHUB_OUTPUT"
+          echo "features=$FEATURES" >> "$GITHUB_OUTPUT"
+          echo "os=$OS" >> "$GITHUB_OUTPUT"
+          echo "arch=$ARCH" >> "$GITHUB_OUTPUT"
+
+      - name: 安装 xcaddy 并构建
         id: build
         run: |
-          KEY=$(go run ./cmd/gbx-store variant-key \
-            -component caddy -version "${{ inputs.version }}" \
-            -os "${{ inputs.os }}" -arch "${{ inputs.arch }}" \
-            -features "${{ inputs.features }}")
+          go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+          KEY=$(go run ./cmd/gbx-store variant-key -component "${{ steps.meta.outputs.component }}" \
+            -version "${{ steps.meta.outputs.version }}" -os "${{ steps.meta.outputs.os }}" \
+            -arch "${{ steps.meta.outputs.arch }}" -features "${{ steps.meta.outputs.features }}")
           echo "key=$KEY" >> "$GITHUB_OUTPUT"
 
           WITH=()
-          IFS=',' read -r -a arr <<< "${{ inputs.features }}"
+          IFS=',' read -r -a arr <<< "${{ steps.meta.outputs.features }}"
           for f in "${arr[@]}"; do [ -n "$f" ] && WITH+=(--with "$f"); done
-          GOOS="${{ inputs.os }}" GOARCH="${{ inputs.arch }}" \
-            xcaddy build "v${{ inputs.version }}" "${WITH[@]}" --output dist/caddy
 
+          mkdir -p dist/variants
+          "$(go env GOPATH)/bin/xcaddy" build "v${{ steps.meta.outputs.version }}" "${WITH[@]}" --output dist/variants/caddy
           LABEL="${KEY#sha256:}"
-          NAME="caddy-${{ inputs.version }}-${LABEL}-${{ inputs.os }}-${{ inputs.arch }}"
-          mkdir -p dist
-          tar -czf "dist/${NAME}.tar.gz" -C dist caddy
-          SHA=$(sha256sum "dist/${NAME}.tar.gz" | awk '{print $1}')
+          NAME="caddy-${{ steps.meta.outputs.version }}-${LABEL}-${{ steps.meta.outputs.os }}-${{ steps.meta.outputs.arch }}"
+          tar --sort=name --mtime='UTC 2020-01-01' --owner=0 --group=0 --numeric-owner \
+            -czf "dist/variants/${NAME}.tar.gz" -C dist/variants caddy
+          rm -f dist/variants/caddy
           echo "name=$NAME" >> "$GITHUB_OUTPUT"
-          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
 
-      - name: 发布变体 Release
+      - name: 发布 Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: variants/${{ steps.build.outputs.name }}
-          files: dist/${{ steps.build.outputs.name }}.tar.gz
+          tag_name: "variants/${{ steps.meta.outputs.component }}-v${{ steps.meta.outputs.version }}-${{ steps.meta.outputs.short || 'core' }}"
+          files: dist/variants/*.tar.gz
 
-      - name: 回填 variants.yaml
+      - name: 登记 variants.yaml 并提交（拉取重试）
         run: |
-          cat >> variants.yaml <<EOF
-          # 由 CI 回填（${{ github.run_id }}）
-          # - component: caddy
-          #   version: "${{ inputs.version }}"
-          #   features: [${{ inputs.features }}]
-          #   os: ${{ inputs.os }}
-          #   arch: ${{ inputs.arch }}
-          #   url: https://github.com/${{ github.repository }}/releases/download/variants/${{ steps.build.outputs.name }}.tar.gz
-          #   sha256: "${{ steps.build.outputs.sha }}"
-          EOF
-          # 真实实现应在 variants: 列表下追加条目；此处保留人工确认后提交。
-          go run ./cmd/gbx-store index
-      - name: 提交索引
-        run: |
+          BASE="https://github.com/${{ github.repository }}/releases/download/variants/${{ steps.meta.outputs.component }}-v${{ steps.meta.outputs.version }}-${{ steps.meta.outputs.short || 'core' }}"
+          go run ./cmd/gbx-store variant-stamp \
+            -component "${{ steps.meta.outputs.component }}" \
+            -version "${{ steps.meta.outputs.version }}" \
+            -features "${{ steps.meta.outputs.features }}" \
+            -os "${{ steps.meta.outputs.os }}" -arch "${{ steps.meta.outputs.arch }}" \
+            -file "dist/variants/${{ steps.build.outputs.name }}.tar.gz" \
+            -base-url "$BASE"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.json variants.yaml
-          git diff --staged --quiet || git commit -m "chore(variant): caddy ${{ inputs.version }} ${{ steps.build.outputs.key }}"
-          git push
+          for i in 1 2 3 4 5; do
+            go run ./cmd/gbx-store index
+            git add variants.yaml index.json
+            git diff --staged --quiet || git commit -m "chore(variant): caddy ${{ steps.meta.outputs.version }} ${{ steps.meta.outputs.short || 'core' }}"
+            if git push; then echo pushed; exit 0; fi
+            git pull --rebase --autostash -q origin main
+            go run ./cmd/gbx-store variant-stamp \
+              -component "${{ steps.meta.outputs.component }}" \
+              -version "${{ steps.meta.outputs.version }}" \
+              -features "${{ steps.meta.outputs.features }}" \
+              -os "${{ steps.meta.outputs.os }}" -arch "${{ steps.meta.outputs.arch }}" \
+              -file "dist/variants/${{ steps.build.outputs.name }}.tar.gz" \
+              -base-url "$BASE"
+            sleep 3
+          done
+          exit 1
