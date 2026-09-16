@@ -9,6 +9,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -140,7 +141,26 @@ func (s *supervisor) pid() int {
 
 func (s *supervisor) running() bool {
 	p := s.pid()
-	return p > 0 && syscall.Kill(p, 0) == nil
+	if p <= 0 {
+		return false
+	}
+	if isZombie(p) {
+		return false // 已退出但未回收：不可视为运行中
+	}
+	return syscall.Kill(p, 0) == nil
+}
+
+// isZombie 判定进程是否为僵尸（/proc/<pid>/stat 状态位为 Z）。
+func isZombie(pid int) bool {
+	b, err := os.ReadFile(fmt.Sprintf("/proc/%d/stat", pid))
+	if err != nil {
+		return false
+	}
+	i := bytes.LastIndexByte(b, ')')
+	if i < 0 || i+2 >= len(b) {
+		return false
+	}
+	return b[i+2] == 'Z'
 }
 
 func (s *supervisor) start() error {
@@ -162,7 +182,15 @@ func (s *supervisor) start() error {
 	if err := cmd.Start(); err != nil {
 		return err
 	}
-	_ = os.WriteFile(s.pidF(), []byte(strconv.Itoa(cmd.Process.Pid)), 0o644)
+	pid := cmd.Process.Pid
+	_ = os.WriteFile(s.pidF(), []byte(strconv.Itoa(pid)), 0o644)
+	// 回收子进程，避免其退出后成为僵尸；退出后清理 pid 文件。
+	go func() {
+		_ = cmd.Wait()
+		if s.pid() == pid {
+			_ = os.Remove(s.pidF())
+		}
+	}()
 	time.Sleep(300 * time.Millisecond)
 	if !s.running() {
 		return fmt.Errorf("mosdns 启动后立即退出，日志: %s", s.logF())

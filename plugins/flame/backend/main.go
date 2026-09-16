@@ -4,6 +4,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -22,11 +23,21 @@ func main() {
 	dataDir := envOr("GATEBOX_DATA_DIR", ".")
 	port := envOr("GATEBOX_PLUGIN_PORT", "8099")
 	token := os.Getenv("GATEBOX_PLUGIN_TOKEN")
-	flamePort := envOr("GATEBOX_FLAME_PORT", "5005")
-
-	dir := filepath.Join(dataDir, "tools", "flame")
+	// 运行目录由插件 id 决定（与内核制品落点 tools/<id> 一致）。
+	dir := filepath.Join(dataDir, "tools", envOr("GATEBOX_PLUGIN_ID", "flame"))
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		log.Fatalf("创建运行目录失败: %v", err)
+	}
+	// 监听端口优先级：settings.json > GATEBOX_FLAME_PORT > 5005。
+	// settings.json 由用户/管理页写入（避免与本机已有 flare 端口冲突）。
+	flamePort := envOr("GATEBOX_FLAME_PORT", "5005")
+	if b, err := os.ReadFile(filepath.Join(dir, "settings.json")); err == nil {
+		var cfg struct {
+			Port string `json:"port"`
+		}
+		if json.Unmarshal(b, &cfg) == nil && strings.TrimSpace(cfg.Port) != "" {
+			flamePort = strings.TrimSpace(cfg.Port)
+		}
 	}
 	s := &supervisor{dir: dir, port: flamePort}
 
@@ -73,7 +84,29 @@ func (s *supervisor) pid() int {
 	p, _ := strconv.Atoi(strings.TrimSpace(string(b)))
 	return p
 }
-func (s *supervisor) running() bool { p := s.pid(); return p > 0 && syscall.Kill(p, 0) == nil }
+func (s *supervisor) running() bool {
+	p := s.pid()
+	if p <= 0 {
+		return false
+	}
+	if isZombie(p) {
+		return false
+	}
+	return syscall.Kill(p, 0) == nil
+}
+
+// isZombie 判定进程是否为僵尸（/proc/<pid>/stat 状态位为 Z）。
+func isZombie(pid int) bool {
+	b, err := os.ReadFile(fmt.Sprintf("/proc/%d/stat", pid))
+	if err != nil {
+		return false
+	}
+	i := bytes.LastIndexByte(b, ')')
+	if i < 0 || i+2 >= len(b) {
+		return false
+	}
+	return b[i+2] == 'Z'
+}
 
 func (s *supervisor) start() error {
 	if s.running() {
@@ -95,10 +128,17 @@ func (s *supervisor) start() error {
 	if err := cmd.Start(); err != nil {
 		return err
 	}
-	_ = os.WriteFile(s.pidF(), []byte(strconv.Itoa(cmd.Process.Pid)), 0o644)
+	pid := cmd.Process.Pid
+	_ = os.WriteFile(s.pidF(), []byte(strconv.Itoa(pid)), 0o644)
+	go func() {
+		_ = cmd.Wait()
+		if s.pid() == pid {
+			_ = os.Remove(s.pidF())
+		}
+	}()
 	time.Sleep(300 * time.Millisecond)
 	if !s.running() {
-		return fmt.Errorf("flame 启动后立即退出，日志: %s", s.logF())
+		return fmt.Errorf("flame 启动后立即退出（端口 %s 可能被占用），日志: %s", s.port, s.logF())
 	}
 	return nil
 }

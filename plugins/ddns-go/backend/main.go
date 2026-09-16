@@ -34,7 +34,8 @@ func main() {
 	token := os.Getenv("GATEBOX_PLUGIN_TOKEN")
 	coreURL := strings.TrimRight(os.Getenv("GATEBOX_CORE_URL"), "/")
 
-	dir := filepath.Join(dataDir, "tools", "ddnsgo")
+	// 运行目录由插件 id 决定（与内核制品落点 tools/<id> 一致），不硬编码。
+	dir := filepath.Join(dataDir, "tools", envOr("GATEBOX_PLUGIN_ID", "ddns-go"))
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		log.Fatalf("创建运行目录失败: %v", err)
 	}
@@ -391,7 +392,29 @@ func (s *supervisor) pid() int {
 	p, _ := strconv.Atoi(strings.TrimSpace(string(b)))
 	return p
 }
-func (s *supervisor) running() bool { p := s.pid(); return p > 0 && syscall.Kill(p, 0) == nil }
+func (s *supervisor) running() bool {
+	p := s.pid()
+	if p <= 0 {
+		return false
+	}
+	if isZombie(p) {
+		return false
+	}
+	return syscall.Kill(p, 0) == nil
+}
+
+// isZombie 判定进程是否为僵尸（/proc/<pid>/stat 状态位为 Z）。
+func isZombie(pid int) bool {
+	b, err := os.ReadFile(fmt.Sprintf("/proc/%d/stat", pid))
+	if err != nil {
+		return false
+	}
+	i := bytes.LastIndexByte(b, ')')
+	if i < 0 || i+2 >= len(b) {
+		return false
+	}
+	return b[i+2] == 'Z'
+}
 
 func (s *supervisor) start(configPath string) error {
 	if s.running() {
@@ -412,7 +435,14 @@ func (s *supervisor) start(configPath string) error {
 	if err := cmd.Start(); err != nil {
 		return err
 	}
-	_ = os.WriteFile(s.pidF(), []byte(strconv.Itoa(cmd.Process.Pid)), 0o644)
+	pid := cmd.Process.Pid
+	_ = os.WriteFile(s.pidF(), []byte(strconv.Itoa(pid)), 0o644)
+	go func() {
+		_ = cmd.Wait()
+		if s.pid() == pid {
+			_ = os.Remove(s.pidF())
+		}
+	}()
 	time.Sleep(300 * time.Millisecond)
 	if !s.running() {
 		return fmt.Errorf("ddns-go 启动后立即退出，日志: %s", s.logF())
