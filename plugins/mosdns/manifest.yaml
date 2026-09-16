@@ -7,37 +7,37 @@ summary: 内网 DNS 解析与分流（独立后端 + 独立管理页）
 tags: [独立进程, DNS]
 channel: official
 publisher:
-  id: jiangbeta
-  name: GateBox
+    id: jiangbeta
+    name: GateBox
 requires:
-  gatebox: ">=0.4.0"
-  extensionApi: ">=1"
-  os: [linux]
+    gatebox: ">=0.4.0"
+    extensionApi: ">=1"
+    os: [linux]
 artifacts:
-  # 插件提供的组件本体：mosdns 二进制（由插件 sidecar 代管进程，ADR-037 决策 (a)）。
-  - role: binary
-    os: linux
-    arch: amd64
-    url: https://github.com/IrineSistiana/mosdns/releases/download/v5.3.4/mosdns-linux-amd64.zip
-    sha256: 3abcc73080789eb1ccca78dab5049b85ac1e9b8f865ab60158a527b77cd72e85
-    size: 7333579
-  # 管理逻辑侧车（本仓库 plugins/mosdns/backend 构建）。
-  - role: sidecar
-    os: linux
-    arch: amd64
-    url: https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.0/mosdns-sidecar-linux-amd64.tar.gz
-    sha256: 1ded264d836499f49728da86767d9b2a19fdbfa98e3a011b53824c9460861a43
-    size: 6057728
-  # 管理页（本仓库 plugins/mosdns/ui 构建，L1 iframe）。
-  - role: ui
-    format: iframe
-    url: https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.0/mosdns-ui.tar.gz
-    sha256: 2ba007a69e5c00744268b97ff7848df04086217363f874711f7d28d478eed273
-    size: 839314
+    # 插件提供的组件本体：mosdns 二进制（由插件 sidecar 代管进程，ADR-037 决策 (a)）。
+    - role: binary
+      os: linux
+      arch: amd64
+      url: https://github.com/IrineSistiana/mosdns/releases/download/v5.3.4/mosdns-linux-amd64.zip
+      sha256: 3abcc73080789eb1ccca78dab5049b85ac1e9b8f865ab60158a527b77cd72e85
+      size: 7333579
+    # 管理逻辑侧车（本仓库 plugins/mosdns/backend 构建）。
+    - role: sidecar
+      os: linux
+      arch: amd64
+      url: https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.1/mosdns-sidecar-linux-amd64.tar.gz
+      sha256: f5c64c4542b5f763ee53836f9fe44a58c92086819390c9e86c64a55a5e85fb46
+      size: 6066480
+    # 管理页（本仓库 plugins/mosdns/ui 构建，L1 iframe）。
+    - role: ui
+      format: iframe
+      url: https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.1/mosdns-ui.tar.gz
+      sha256: 3e54ce739d8dac0b3a5f78f014fe5f0c3ac1794b4def695829c1675b94fd8cd4
+      size: 839324
 contributions:
-  ui:
-    nav:
-      - { path: /plugins/mosdns, label: MosDNS }
+    ui:
+        nav:
+            - {path: /plugins/mosdns, label: MosDNS}
 permissions:
-  - filesystem: { write: [tools/mosdns] }
-  - api: [domain:read]
+    - filesystem: {write: [tools/mosdns]}
+    - api: ['domain:read']
