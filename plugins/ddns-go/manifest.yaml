@@ -7,36 +7,37 @@ summary: 动态 DNS，把域名解析到本机公网 IP
 tags: [独立进程, DNS]
 channel: official
 publisher:
-  id: jiangbeta
-  name: GateBox
+    id: jiangbeta
+    name: GateBox
 requires:
-  gatebox: ">=0.4.0"
-  extensionApi: ">=1"
-  os: [linux]
+    gatebox: ">=0.4.0"
+    extensionApi: ">=1"
+    os: [linux]
 artifacts:
-  # 组件本体：ddns-go 二进制（由插件 sidecar 代管进程）。
-  - role: binary
-    os: linux
-    arch: amd64
-    url: https://github.com/jeessy2/ddns-go/releases/download/v6.17.7/ddns-go_6.17.7_linux_x86_64.tar.gz
-    sha256: b1f88532c60f4e94f973eaf4d56b92a030f4c97fb98f146f8c591d55ad6ec118
-    size: 4691336
-  # 管理/收敛 sidecar（本仓库 plugins/ddns-go/backend 构建）。
-  - role: sidecar
-    os: linux
-    arch: amd64
-    url: https://github.com/JiangBeta/GateBoxStore/releases/download/ddns-go/v0.1.0/ddns-go-sidecar-linux-amd64.tar.gz
-    sha256: "" # TODO: 发布前回填
+    # 组件本体：ddns-go 二进制（由插件 sidecar 代管进程）。
+    - role: binary
+      os: linux
+      arch: amd64
+      url: https://github.com/jeessy2/ddns-go/releases/download/v6.17.7/ddns-go_6.17.7_linux_x86_64.tar.gz
+      sha256: b1f88532c60f4e94f973eaf4d56b92a030f4c97fb98f146f8c591d55ad6ec118
+      size: 4691336
+    # 管理/收敛 sidecar（本仓库 plugins/ddns-go/backend 构建）。
+    - role: sidecar
+      os: linux
+      arch: amd64
+      url: https://github.com/JiangBeta/GateBoxStore/releases/download/ddns-go/v0.1.0/ddns-go-sidecar-linux-amd64.tar.gz
+      sha256: 26717eafd089ec01ed0ee0e240ef90dd0b8e726f8c5969756ddc5f0174e250ff # TODO: 发布前回填
+      size: 5680944
 contributions:
-  # 消费型插件：订阅 domains 投影，自行拉取并收敛（ADR-036 §6）。
-  data:
-    subscribe: [domains]
-  backend:
-    - point: reconcile
-      projection: domains
-      interval: 5m
-      entry: ddns-go-sidecar
+    # 消费型插件：订阅 domains 投影，自行拉取并收敛（ADR-036 §6）。
+    data:
+        subscribe: [domains]
+    backend:
+        - point: reconcile
+          projection: domains
+          interval: 5m
+          entry: ddns-go-sidecar
 permissions:
-  - filesystem: { write: [tools/ddnsgo] }
-  # 读取域名投影与（解密后的）凭证投影；密钥仅经本机反代投递，不进 domains 投影。
-  - api: [domain:read, credentials:read]
+    - filesystem: {write: [tools/ddnsgo]}
+    # 读取域名投影与（解密后的）凭证投影；密钥仅经本机反代投递，不进 domains 投影。
+    - api: ['domain:read', 'credentials:read']
