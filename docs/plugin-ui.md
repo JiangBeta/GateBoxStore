@@ -10,7 +10,7 @@
 | **L1 iframe + postMessage** | 插件自带 UI 资源，内核内嵌 | 强隔离（独立源，仅经桥通信） | 复杂页面（如 mosdns 管理页） |
 | **L2 远程 ESM** | 内核动态 import 插件 ESM | 无（同源 = 等价 XSS） | 仅 `official`/`verified`（**后置**） |
 
-本阶段实现 L0 与 L1。优先选 L0；只有 L0 表达不了的复杂交互才用 L1。
+L0/L1/L2 均已支持；优先选 L0，复杂交互用 L1，仅 official/verified 且确需同源交互时才用 L2。
 
 ## 2. L0：元数据驱动
 
@@ -88,9 +88,24 @@ new ResizeObserver(() => {
 - 尺寸：内容高度自适应并上报 `resize`；不要自行滚动整页。
 - 无网络直连宿主未声明的主机；外部请求需在 `permissions.network` 声明。
 
-## 4. L2：远程 ESM（后置）
+## 4. L2：远程 ESM
 
-仅 `official`/`verified` 可用。内核动态 `import()` 插件入口 ESM，插件组件挂载到内核路由。**因同源故无隔离，等价于让插件执行任意前端代码**，需信任分级门禁与用户确认。本阶段不开放。
+仅 `channel ∈ {official, verified}` 可用（内核强制门禁，其余信任级不注册路由）。内核同源动态 `import()` 插件入口模块并挂载。
+
+**插件模块契约**：
+
+```js
+// artifacts: [{ role: ui, format: esm, entry: index.js }]
+export function mount(el, ctx) {
+  // el: 宿主提供的容器元素；ctx: { pluginId, token, apiBase }
+  el.innerHTML = '<div>…</div>'
+}
+export function unmount(el) { /* 可选：清理 */ }
+```
+
+- 入口默认为 `index.js`，可用 `entry` 指定；由内核托管于 `/plugins/<id>/`。
+- 插件经 `ctx.apiBase` 调业务接口，请求带 `ctx.token`（`X-Plugin-Token`）。
+- **因同源故无隔离，等价于让插件执行任意前端代码**；仅对 official/verified 开放，community 级一律走 L0/L1。
 
 ## 5. 构建 UI 制品
 
@@ -105,4 +120,4 @@ sha256sum mosdns-ui.tar.gz          # 回填 manifest artifacts[].sha256
 
 - 尽量**纯静态**（无 SSR、无 Node 运行时依赖）；
 - 产物大小影响安装与加载，OpenWrt 等低资源设备尤需精简；
-- 同一 UI 制品可按 `format` 区分：`iframe`（本期）或 `esm`（L2，后置）。
+- 同一 UI 制品可按 `format` 区分：`iframe`（L1）或 `esm`（L2）。
