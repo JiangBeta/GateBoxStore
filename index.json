@@ -1,7 +1,7 @@
 {
   "schema": "gatebox.catalog/v1",
   "extensionApi": 1,
-  "generatedAt": "2026-09-16T03:48:01Z",
+  "generatedAt": "2026-09-16T12:01:39Z",
   "publisher": {
     "id": "jiangbeta",
     "name": "GateBox"
@@ -13,7 +13,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:48:01Z",
+          "publishedAt": "2026-09-16T12:01:39Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -100,7 +100,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:48:01Z",
+          "publishedAt": "2026-09-16T12:01:39Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -164,7 +164,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:48:01Z",
+          "publishedAt": "2026-09-16T12:01:39Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -173,8 +173,9 @@
                 "arch": "amd64",
                 "os": "linux",
                 "role": "binary",
-                "sha256": "",
-                "url": "https://github.com/jeessy2/ddns-go/releases/download/v6.9.0/ddns-go_6.9.0_linux_x86_64.tar.gz"
+                "sha256": "b1f88532c60f4e94f973eaf4d56b92a030f4c97fb98f146f8c591d55ad6ec118",
+                "size": 4691336,
+                "url": "https://github.com/jeessy2/ddns-go/releases/download/v6.17.7/ddns-go_6.17.7_linux_x86_64.tar.gz"
               },
               {
                 "arch": "amd64",
@@ -241,8 +242,9 @@
               "arch": "amd64",
               "os": "linux",
               "role": "binary",
-              "sha256": "",
-              "url": "https://github.com/jeessy2/ddns-go/releases/download/v6.9.0/ddns-go_6.9.0_linux_x86_64.tar.gz"
+              "sha256": "b1f88532c60f4e94f973eaf4d56b92a030f4c97fb98f146f8c591d55ad6ec118",
+              "size": 4691336,
+              "url": "https://github.com/jeessy2/ddns-go/releases/download/v6.17.7/ddns-go_6.17.7_linux_x86_64.tar.gz"
             },
             {
               "arch": "amd64",
@@ -261,7 +263,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:48:01Z",
+          "publishedAt": "2026-09-16T12:01:39Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -270,8 +272,9 @@
                 "arch": "amd64",
                 "os": "linux",
                 "role": "binary",
-                "sha256": "",
-                "url": "https://github.com/xiangsx/flame/releases/download/v1.0.0/flame-linux-amd64"
+                "sha256": "1e71345d5dfef52327159adc11764443a333576a3b4d4fbe753b949fefd8ec44",
+                "size": 6912831,
+                "url": "https://github.com/soulteary/flare/releases/download/0.5.2/flare_0.5.2_linux_amd64.tar.gz"
               },
               {
                 "arch": "amd64",
@@ -333,8 +336,9 @@
               "arch": "amd64",
               "os": "linux",
               "role": "binary",
-              "sha256": "",
-              "url": "https://github.com/xiangsx/flame/releases/download/v1.0.0/flame-linux-amd64"
+              "sha256": "1e71345d5dfef52327159adc11764443a333576a3b4d4fbe753b949fefd8ec44",
+              "size": 6912831,
+              "url": "https://github.com/soulteary/flare/releases/download/0.5.2/flare_0.5.2_linux_amd64.tar.gz"
             },
             {
               "arch": "amd64",
@@ -359,7 +363,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:48:01Z",
+          "publishedAt": "2026-09-16T12:01:39Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -416,7 +420,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:48:01Z",
+          "publishedAt": "2026-09-16T12:01:39Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -425,8 +429,9 @@
                 "arch": "amd64",
                 "os": "linux",
                 "role": "binary",
-                "sha256": "",
-                "url": "https://github.com/IrineSistiana/mosdns/releases/download/v5.3.3/mosdns-linux-amd64.zip"
+                "sha256": "3abcc73080789eb1ccca78dab5049b85ac1e9b8f865ab60158a527b77cd72e85",
+                "size": 7333579,
+                "url": "https://github.com/IrineSistiana/mosdns/releases/download/v5.3.4/mosdns-linux-amd64.zip"
               },
               {
                 "arch": "amd64",
@@ -493,8 +498,9 @@
               "arch": "amd64",
               "os": "linux",
               "role": "binary",
-              "sha256": "",
-              "url": "https://github.com/IrineSistiana/mosdns/releases/download/v5.3.3/mosdns-linux-amd64.zip"
+              "sha256": "3abcc73080789eb1ccca78dab5049b85ac1e9b8f865ab60158a527b77cd72e85",
+              "size": 7333579,
+              "url": "https://github.com/IrineSistiana/mosdns/releases/download/v5.3.4/mosdns-linux-amd64.zip"
             },
             {
               "arch": "amd64",
@@ -519,7 +525,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T03:48:01Z",
+          "publishedAt": "2026-09-16T12:01:39Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",

@@ -14,12 +14,13 @@ requires:
   extensionApi: ">=1"
   os: [linux]
 artifacts:
-  # 组件本体：flame 二进制（由插件 sidecar 代管进程）。
+  # 组件本体：flare 二进制（上游项目为 soulteary/flare；安装后落为 tools/flame/flame）。
   - role: binary
     os: linux
     arch: amd64
-    url: https://github.com/xiangsx/flame/releases/download/v1.0.0/flame-linux-amd64
-    sha256: "" # TODO: 发布前回填
+    url: https://github.com/soulteary/flare/releases/download/0.5.2/flare_0.5.2_linux_amd64.tar.gz
+    sha256: 1e71345d5dfef52327159adc11764443a333576a3b4d4fbe753b949fefd8ec44
+    size: 6912831
   # 进程代管 sidecar（本仓库 plugins/flame/backend 构建）。
   - role: sidecar
     os: linux

@@ -3,8 +3,9 @@
 应用导航面板（独立进程插件）。
 
 - **kind**：`process`
-- **构成**：`sidecar`（进程代管 + 状态）+ `binary`（flame 本体）+ `ui`（内嵌页）
-- **进程模型**：GateBox 只托管 sidecar；flame 本体由 sidecar 代管（ADR-037 决策 (a)）
+- **构成**：`sidecar`（进程代管 + 状态）+ `binary`（本体）+ `ui`（内嵌页）
+- **进程模型**：GateBox 只托管 sidecar；本体由 sidecar 代管（ADR-037 决策 (a)）
+- **上游说明**：本体来自 **`soulteary/flare`**（发布资产名 `flare_*`），安装后统一落为 `tools/flame/flame`；插件 id 沿用项目既有命名 `flame`。
 
 ## 页面
 

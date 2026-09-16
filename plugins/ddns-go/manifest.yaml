@@ -18,8 +18,9 @@ artifacts:
   - role: binary
     os: linux
     arch: amd64
-    url: https://github.com/jeessy2/ddns-go/releases/download/v6.9.0/ddns-go_6.9.0_linux_x86_64.tar.gz
-    sha256: "" # TODO: 发布前回填
+    url: https://github.com/jeessy2/ddns-go/releases/download/v6.17.7/ddns-go_6.17.7_linux_x86_64.tar.gz
+    sha256: b1f88532c60f4e94f973eaf4d56b92a030f4c97fb98f146f8c591d55ad6ec118
+    size: 4691336
   # 管理/收敛 sidecar（本仓库 plugins/ddns-go/backend 构建）。
   - role: sidecar
     os: linux
