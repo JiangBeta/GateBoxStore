@@ -123,7 +123,7 @@ contributions:
         fields:
           - { name: token, label: API Token, type: password, required: true, secret: true }
         envMap: { token: CF_Token }
-        ddnsProvider: cloudflare
+        ddns: { provider: cloudflare, secretField: token }
 artifacts:
   - role: assets
     url: https://github.com/JiangBeta/GateBoxStore/releases/download/dns-cloudflare/v0.1.0/dnsapi.tar.gz

@@ -47,7 +47,7 @@
 |---|---|---|
 | `proxy-protocols` | 可代理的协议类别 | `class`（`http`\|`non-http`）、`label`、`protocols[]`、`networks[]`、`requiresPrimaryDomain` |
 | `component-variant` | 给核心组件加编译期特征 | `component`、`feature`（中性标识，如 Go 模块路径） |
-| `dns-provider` | DNS 凭证供应商 | `id`、`label`、`acmeHook`、`fields[]`、`envMap{}`、`ddnsProvider` |
+| `dns-provider` | DNS 凭证供应商 | `id`、`label`、`acmeHook`、`fields[]`、`envMap{}`、`ddns{provider,idField,secretField}` |
 | `validator` | 校验器（可指定用哪个制品） | `bin`（缺省 = 当前 active 组件制品） |
 
 `dns-provider.fields[]`：`{name, label, type(password\|text), required, secret}`。
