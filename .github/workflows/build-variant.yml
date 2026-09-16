@@ -26,7 +26,7 @@ on:
         default: amd64
   push:
     tags:
-      - "variants/*"
+      - "variants/**"
 
 permissions:
   contents: write
