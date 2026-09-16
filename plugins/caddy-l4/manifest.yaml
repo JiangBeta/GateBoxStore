@@ -33,7 +33,7 @@ contributions:
       scope: global
       impl:
         type: template
-        template: |
+        template: |-
           layer4 {
           {{- range .Rules }}
           {{- $r := . }}

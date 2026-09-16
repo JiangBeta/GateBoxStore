@@ -1,7 +1,7 @@
 {
   "schema": "gatebox.catalog/v1",
   "extensionApi": 1,
-  "generatedAt": "2026-09-16T02:23:46Z",
+  "generatedAt": "2026-09-16T02:31:51Z",
   "publisher": {
     "id": "jiangbeta",
     "name": "GateBox"
@@ -13,7 +13,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T02:23:46Z",
+          "publishedAt": "2026-09-16T02:31:51Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -23,7 +23,7 @@
                 {
                   "for": "non-http",
                   "impl": {
-                    "template": "layer4 {\n{{- range .Rules }}\n{{- $r := . }}\n{{- range $r.Nets }}\n{{- $net := . }}\n{{- range $r.Ports }}\n\t{{ $net }}/:{{ . }} {\n\t\troute {\n\t\t\tproxy {{ $net }}/{{ $r.Upstream }}\n\t\t}\n\t}\n{{- end }}\n{{- end }}\n{{- end }}\n}\n",
+                    "template": "layer4 {\n{{- range .Rules }}\n{{- $r := . }}\n{{- range $r.Nets }}\n{{- $net := . }}\n{{- range $r.Ports }}\n\t{{ $net }}/:{{ . }} {\n\t\troute {\n\t\t\tproxy {{ $net }}/{{ $r.Upstream }}\n\t\t}\n\t}\n{{- end }}\n{{- end }}\n{{- end }}\n}",
                     "type": "template"
                   },
                   "point": "renderer",
@@ -88,6 +88,174 @@
             "tags": [
               "Caddy插件",
               "TCP/UDP"
+            ],
+            "version": "0.1.0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "coraza",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "channel": "official",
+          "publishedAt": "2026-09-16T02:31:51Z",
+          "extensionApi": 1,
+          "manifest": {
+            "apiVersion": "gatebox/v2",
+            "channel": "official",
+            "contributions": {
+              "capabilities": [
+                {
+                  "data": {
+                    "component": "caddy",
+                    "feature": "github.com/corazawaf/coraza-caddy/v2"
+                  },
+                  "point": "component-variant"
+                }
+              ],
+              "ui": {
+                "nav": [
+                  {
+                    "icon": "shield",
+                    "label": "WAF",
+                    "path": "/plugins/coraza"
+                  }
+                ],
+                "page": {
+                  "type": "settings"
+                }
+              }
+            },
+            "id": "coraza",
+            "kind": "caddy-module",
+            "name": "Coraza WAF",
+            "permissions": [
+              {
+                "api": [
+                  "gateway:read"
+                ]
+              }
+            ],
+            "publisher": {
+              "id": "jiangbeta",
+              "name": "GateBox"
+            },
+            "requires": {
+              "components": [
+                "caddy"
+              ],
+              "extensionApi": "\u003e=1",
+              "gatebox": "\u003e=0.4.0"
+            },
+            "summary": "OWASP CRS 规则的 Web 应用防火墙（需含 coraza 模块的 Caddy 制品）",
+            "tags": [
+              "Caddy插件"
+            ],
+            "version": "0.1.0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "geoip",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "channel": "official",
+          "publishedAt": "2026-09-16T02:31:51Z",
+          "extensionApi": 1,
+          "manifest": {
+            "apiVersion": "gatebox/v2",
+            "channel": "official",
+            "contributions": {
+              "capabilities": [
+                {
+                  "data": {
+                    "component": "caddy",
+                    "feature": "github.com/porech/caddy-maxmind-geolocation"
+                  },
+                  "point": "component-variant"
+                }
+              ],
+              "ui": {
+                "page": {
+                  "type": "settings"
+                }
+              }
+            },
+            "id": "geoip",
+            "kind": "caddy-module",
+            "name": "GeoIP",
+            "permissions": [
+              {
+                "api": [
+                  "gateway:read"
+                ]
+              }
+            ],
+            "publisher": {
+              "id": "jiangbeta",
+              "name": "GateBox"
+            },
+            "requires": {
+              "components": [
+                "caddy"
+              ],
+              "extensionApi": "\u003e=1",
+              "gatebox": "\u003e=0.4.0"
+            },
+            "summary": "按国家/地区做访问控制与分流（需含 geoip 模块的 Caddy 制品）",
+            "tags": [
+              "Caddy插件"
+            ],
+            "version": "0.1.0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "realip",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "channel": "official",
+          "publishedAt": "2026-09-16T02:31:51Z",
+          "extensionApi": 1,
+          "manifest": {
+            "apiVersion": "gatebox/v2",
+            "channel": "official",
+            "contributions": {
+              "ui": {
+                "page": {
+                  "type": "settings"
+                }
+              }
+            },
+            "id": "realip",
+            "kind": "config-only",
+            "name": "Real IP",
+            "permissions": [
+              {
+                "api": [
+                  "gateway:read"
+                ]
+              }
+            ],
+            "publisher": {
+              "id": "jiangbeta",
+              "name": "GateBox"
+            },
+            "requires": {
+              "components": [
+                "caddy"
+              ],
+              "extensionApi": "\u003e=1"
+            },
+            "summary": "在 Caddyfile 注入 real_ip 指令，还原客户端真实地址",
+            "tags": [
+              "Caddy插件"
             ],
             "version": "0.1.0"
           }

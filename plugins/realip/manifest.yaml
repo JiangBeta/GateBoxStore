@@ -1,0 +1,20 @@
+apiVersion: gatebox/v2
+kind: config-only
+id: realip
+name: Real IP
+version: 0.1.0
+summary: 在 Caddyfile 注入 real_ip 指令，还原客户端真实地址
+tags: [Caddy插件]
+channel: official
+publisher:
+  id: jiangbeta
+  name: GateBox
+requires:
+  extensionApi: ">=1"
+  components: [caddy]
+contributions:
+  ui:
+    page:
+      type: settings
+permissions:
+  - api: [gateway:read]

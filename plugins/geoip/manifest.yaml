@@ -1,0 +1,27 @@
+apiVersion: gatebox/v2
+kind: caddy-module
+id: geoip
+name: GeoIP
+version: 0.1.0
+summary: 按国家/地区做访问控制与分流（需含 geoip 模块的 Caddy 制品）
+tags: [Caddy插件]
+channel: official
+publisher:
+  id: jiangbeta
+  name: GateBox
+requires:
+  gatebox: ">=0.4.0"
+  extensionApi: ">=1"
+  components: [caddy]
+contributions:
+  capabilities:
+    # TODO: 发布前确认 Caddy GeoIP 模块路径。
+    - point: component-variant
+      data:
+        component: caddy
+        feature: github.com/porech/caddy-maxmind-geolocation
+  ui:
+    page:
+      type: settings
+permissions:
+  - api: [gateway:read]

@@ -1,0 +1,29 @@
+apiVersion: gatebox/v2
+kind: caddy-module
+id: coraza
+name: Coraza WAF
+version: 0.1.0
+summary: OWASP CRS 规则的 Web 应用防火墙（需含 coraza 模块的 Caddy 制品）
+tags: [Caddy插件]
+channel: official
+publisher:
+  id: jiangbeta
+  name: GateBox
+requires:
+  gatebox: ">=0.4.0"
+  extensionApi: ">=1"
+  components: [caddy]
+contributions:
+  capabilities:
+    # 中性特征：Caddy 变体由 GateBoxStore CI 按特征并集构建（ADR-038）。
+    - point: component-variant
+      data:
+        component: caddy
+        feature: github.com/corazawaf/coraza-caddy/v2
+  ui:
+    nav:
+      - { path: /plugins/coraza, label: WAF, icon: shield }
+    page:
+      type: settings
+permissions:
+  - api: [gateway:read]
