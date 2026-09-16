@@ -131,8 +131,9 @@ CI: gbx-store index → 提交 index.json（客户端经 raw.githubusercontent �
 索引 `index.json` 使用 **Ed25519 detached 签名**（`index.json.sig`，base64）：
 
 ```bash
-go run ./cmd/gbx-store keygen -out keys      # 生成 keys/catalog.key(私钥) 与 keys/catalog.pub(公钥)
-go run ./cmd/gbx-store sign -in index.json    # 生成 index.json.sig
+go run ./cmd/gbx-store keygen -out keys                          # 生成 keys/catalog.key(私钥) 与 keys/catalog.pub(公钥)
+go run ./cmd/gbx-store sign   -in index.json                     # 生成 index.json.sig
+go run ./cmd/gbx-store verify -in index.json -pub <base64公钥>    # 自检：签名与索引是否匹配
 ```
 
 - 私钥配到 CI Secret `GBX_STORE_KEY`（`sign-index.yml` 自动签名并提交 `index.json.sig`）；**私钥绝不入库**（`.gitignore` 已忽略 `keys/`、`*.key`）。

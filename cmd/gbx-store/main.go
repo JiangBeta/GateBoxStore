@@ -51,6 +51,8 @@ func main() {
 		err = runVariantKey(os.Args[2:])
 	case "keygen":
 		err = runKeygen(os.Args[2:])
+	case "verify":
+		err = runVerify(os.Args[2:])
 	case "sign":
 		err = runSign(os.Args[2:])
 	case "stamp":

@@ -24,6 +24,9 @@ go run ./cmd/gbx-store pack -dir plugins/<id> -out dist/   # 打包插件目录�
 scripts/build-plugin.sh <id>           # 构建插件的 sidecar/ui/assets 制品 → dist/<id>/
 go run ./cmd/gbx-store stamp -plugin plugins/<id> -dist dist/<id> -base-url <releaseURL>
                                        # 回填 artifacts[].url/sha256/size（保留注释，不手改）
+go run ./cmd/gbx-store keygen -out keys          # 生成发布者 Ed25519 密钥对
+go run ./cmd/gbx-store sign -in index.json       # 生成 index.json.sig
+go run ./cmd/gbx-store verify -in index.json -pub <base64公钥>   # 校验索引签名
 go run ./cmd/gbx-store variant-key -component caddy -version 2.10.0 -os linux -arch amd64 -features a,b
 
 go build ./...                         # 编译工具
