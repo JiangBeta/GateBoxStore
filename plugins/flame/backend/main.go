@@ -117,9 +117,10 @@ func (s *supervisor) start() error {
 	}
 	_ = os.Remove(s.pidF())
 	lf, _ := os.OpenFile(s.logF(), os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o644)
-	cmd := exec.Command(s.bin())
+	// flare 通过 -p/--port 指定监听端口（不读 PORT 环境变量）。
+	cmd := exec.Command(s.bin(), "-p", s.port)
 	cmd.Dir = s.dir
-	cmd.Env = append(os.Environ(), "PORT="+s.port)
+	cmd.Env = os.Environ()
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
 	if lf != nil {
 		cmd.Stdout = lf
