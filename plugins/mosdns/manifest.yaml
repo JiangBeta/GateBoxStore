@@ -25,15 +25,15 @@ artifacts:
     - role: sidecar
       os: linux
       arch: amd64
-      url: https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.1/mosdns-sidecar-linux-amd64.tar.gz
-      sha256: f5c64c4542b5f763ee53836f9fe44a58c92086819390c9e86c64a55a5e85fb46
-      size: 6066480
+      url: https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.2/mosdns-sidecar-linux-amd64.tar.gz
+      sha256: 4a87f23350990fe614e980c3a7b2ae41e651569ada8fed1394bbc2e3ba5da4e9
+      size: 6067571
     # 管理页（本仓库 plugins/mosdns/ui 构建，L1 iframe）。
     - role: ui
       format: iframe
-      url: https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.1/mosdns-ui.tar.gz
-      sha256: 3e54ce739d8dac0b3a5f78f014fe5f0c3ac1794b4def695829c1675b94fd8cd4
-      size: 839324
+      url: https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.2/mosdns-ui.tar.gz
+      sha256: 6f88d9b9308cf153a4f1c3fe53142fdd4b3f403dbc889f9da6a30f2b2045ec24
+      size: 839325
 contributions:
     ui:
         nav:

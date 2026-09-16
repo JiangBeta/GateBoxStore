@@ -1,7 +1,7 @@
 {
   "schema": "gatebox.catalog/v1",
   "extensionApi": 1,
-  "generatedAt": "2026-09-16T13:48:30Z",
+  "generatedAt": "2026-09-16T13:49:38Z",
   "publisher": {
     "id": "jiangbeta",
     "name": "GateBox"
@@ -13,7 +13,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T13:48:30Z",
+          "publishedAt": "2026-09-16T13:49:38Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -100,7 +100,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T13:48:30Z",
+          "publishedAt": "2026-09-16T13:49:38Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -164,7 +164,7 @@
         {
           "version": "0.1.2",
           "channel": "official",
-          "publishedAt": "2026-09-16T13:48:30Z",
+          "publishedAt": "2026-09-16T13:49:38Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -265,7 +265,7 @@
         {
           "version": "0.1.2",
           "channel": "official",
-          "publishedAt": "2026-09-16T13:48:30Z",
+          "publishedAt": "2026-09-16T13:49:38Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -369,7 +369,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T13:48:30Z",
+          "publishedAt": "2026-09-16T13:49:38Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -426,7 +426,7 @@
         {
           "version": "0.1.2",
           "channel": "official",
-          "publishedAt": "2026-09-16T13:48:30Z",
+          "publishedAt": "2026-09-16T13:49:38Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -443,16 +443,16 @@
                 "arch": "amd64",
                 "os": "linux",
                 "role": "sidecar",
-                "sha256": "f5c64c4542b5f763ee53836f9fe44a58c92086819390c9e86c64a55a5e85fb46",
-                "size": 6066480,
-                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.1/mosdns-sidecar-linux-amd64.tar.gz"
+                "sha256": "4a87f23350990fe614e980c3a7b2ae41e651569ada8fed1394bbc2e3ba5da4e9",
+                "size": 6067571,
+                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.2/mosdns-sidecar-linux-amd64.tar.gz"
               },
               {
                 "format": "iframe",
                 "role": "ui",
-                "sha256": "3e54ce739d8dac0b3a5f78f014fe5f0c3ac1794b4def695829c1675b94fd8cd4",
-                "size": 839324,
-                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.1/mosdns-ui.tar.gz"
+                "sha256": "6f88d9b9308cf153a4f1c3fe53142fdd4b3f403dbc889f9da6a30f2b2045ec24",
+                "size": 839325,
+                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.2/mosdns-ui.tar.gz"
               }
             ],
             "channel": "official",
@@ -514,16 +514,16 @@
               "arch": "amd64",
               "os": "linux",
               "role": "sidecar",
-              "sha256": "f5c64c4542b5f763ee53836f9fe44a58c92086819390c9e86c64a55a5e85fb46",
-              "size": 6066480,
-              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.1/mosdns-sidecar-linux-amd64.tar.gz"
+              "sha256": "4a87f23350990fe614e980c3a7b2ae41e651569ada8fed1394bbc2e3ba5da4e9",
+              "size": 6067571,
+              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.2/mosdns-sidecar-linux-amd64.tar.gz"
             },
             {
               "format": "iframe",
               "role": "ui",
-              "sha256": "3e54ce739d8dac0b3a5f78f014fe5f0c3ac1794b4def695829c1675b94fd8cd4",
-              "size": 839324,
-              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.1/mosdns-ui.tar.gz"
+              "sha256": "6f88d9b9308cf153a4f1c3fe53142fdd4b3f403dbc889f9da6a30f2b2045ec24",
+              "size": 839325,
+              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/mosdns/v0.1.2/mosdns-ui.tar.gz"
             }
           ]
         }
@@ -535,7 +535,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T13:48:30Z",
+          "publishedAt": "2026-09-16T13:49:38Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
