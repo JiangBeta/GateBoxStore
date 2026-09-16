@@ -1,7 +1,7 @@
 {
   "schema": "gatebox.catalog/v1",
   "extensionApi": 1,
-  "generatedAt": "2026-09-16T14:14:05Z",
+  "generatedAt": "2026-09-16T14:15:14Z",
   "publisher": {
     "id": "jiangbeta",
     "name": "GateBox"
@@ -13,7 +13,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:14:05Z",
+          "publishedAt": "2026-09-16T14:15:14Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -100,7 +100,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:14:05Z",
+          "publishedAt": "2026-09-16T14:15:14Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -164,7 +164,7 @@
         {
           "version": "0.1.4",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:14:05Z",
+          "publishedAt": "2026-09-16T14:15:14Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -297,7 +297,7 @@
         {
           "version": "0.1.6",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:14:05Z",
+          "publishedAt": "2026-09-16T14:15:14Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -322,24 +322,24 @@
                 "arch": "amd64",
                 "os": "linux",
                 "role": "sidecar",
-                "sha256": "29ef90b90eeb7f71413c8478d877e8c8af23798c3cab065ede5310f2a431bbd2",
-                "size": 4924065,
-                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.5/flame-sidecar-linux-amd64.tar.gz"
+                "sha256": "1b0186b18f46729c3856e3f82e4d144eafd1e0571f1d0ee748d5cb415e47c7ae",
+                "size": 4923421,
+                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.6/flame-sidecar-linux-amd64.tar.gz"
               },
               {
                 "arch": "arm64",
                 "os": "linux",
                 "role": "sidecar",
-                "sha256": "69e66bb98ce7170d2a4417968f72a341e400e594dc3376f530442f6ebf34c63a",
-                "size": 4487711,
-                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.5/flame-sidecar-linux-arm64.tar.gz"
+                "sha256": "ff3cf7b047c5b6d9ca6d972b5a6afd8fb0c9c27581bacddabddb62b5514e24b4",
+                "size": 4488081,
+                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.6/flame-sidecar-linux-arm64.tar.gz"
               },
               {
                 "format": "iframe",
                 "role": "ui",
                 "sha256": "461d93beeaa59b17ba18e0f65a552f63ddafe3396a7d4f325556584381b80f46",
                 "size": 1834,
-                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.5/flame-ui.tar.gz"
+                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.6/flame-ui.tar.gz"
               }
             ],
             "channel": "official",
@@ -404,24 +404,24 @@
               "arch": "amd64",
               "os": "linux",
               "role": "sidecar",
-              "sha256": "29ef90b90eeb7f71413c8478d877e8c8af23798c3cab065ede5310f2a431bbd2",
-              "size": 4924065,
-              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.5/flame-sidecar-linux-amd64.tar.gz"
+              "sha256": "1b0186b18f46729c3856e3f82e4d144eafd1e0571f1d0ee748d5cb415e47c7ae",
+              "size": 4923421,
+              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.6/flame-sidecar-linux-amd64.tar.gz"
             },
             {
               "arch": "arm64",
               "os": "linux",
               "role": "sidecar",
-              "sha256": "69e66bb98ce7170d2a4417968f72a341e400e594dc3376f530442f6ebf34c63a",
-              "size": 4487711,
-              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.5/flame-sidecar-linux-arm64.tar.gz"
+              "sha256": "ff3cf7b047c5b6d9ca6d972b5a6afd8fb0c9c27581bacddabddb62b5514e24b4",
+              "size": 4488081,
+              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.6/flame-sidecar-linux-arm64.tar.gz"
             },
             {
               "format": "iframe",
               "role": "ui",
               "sha256": "461d93beeaa59b17ba18e0f65a552f63ddafe3396a7d4f325556584381b80f46",
               "size": 1834,
-              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.5/flame-ui.tar.gz"
+              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/flame/v0.1.6/flame-ui.tar.gz"
             }
           ]
         }
@@ -433,7 +433,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:14:05Z",
+          "publishedAt": "2026-09-16T14:15:14Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -490,7 +490,7 @@
         {
           "version": "0.1.5",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:14:05Z",
+          "publishedAt": "2026-09-16T14:15:14Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -631,7 +631,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:14:05Z",
+          "publishedAt": "2026-09-16T14:15:14Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
