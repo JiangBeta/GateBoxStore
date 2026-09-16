@@ -1,7 +1,7 @@
 {
   "schema": "gatebox.catalog/v1",
   "extensionApi": 1,
-  "generatedAt": "2026-09-16T14:38:11Z",
+  "generatedAt": "2026-09-16T14:42:27Z",
   "publisher": {
     "id": "jiangbeta",
     "name": "GateBox"
@@ -13,7 +13,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:38:11Z",
+          "publishedAt": "2026-09-16T14:42:27Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -100,7 +100,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:38:11Z",
+          "publishedAt": "2026-09-16T14:42:27Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -164,7 +164,7 @@
         {
           "version": "0.1.4",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:38:11Z",
+          "publishedAt": "2026-09-16T14:42:27Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -297,7 +297,7 @@
         {
           "version": "0.1.6",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:38:11Z",
+          "publishedAt": "2026-09-16T14:42:27Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -433,7 +433,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:38:11Z",
+          "publishedAt": "2026-09-16T14:42:27Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -490,7 +490,7 @@
         {
           "version": "0.1.5",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:38:11Z",
+          "publishedAt": "2026-09-16T14:42:27Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -631,7 +631,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-16T14:38:11Z",
+          "publishedAt": "2026-09-16T14:42:27Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -686,6 +686,17 @@
       "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/variants/caddy-v2.11.4-l4/caddy-2.11.4-1b0e92628a61ce04-linux-amd64.tar.gz",
       "sha256": "db38341e69c003e0dedbd9b15b40ff29178c184b4e42d43611e7527c64f17d48",
       "size": 17321291
+    },
+    {
+      "key": "sha256:c48331c2251a2cb0",
+      "component": "caddy",
+      "version": "2.11.4",
+      "features": [],
+      "os": "linux",
+      "arch": "amd64",
+      "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/variants/caddy-v2.11.4-core/caddy-2.11.4-c48331c2251a2cb0-linux-amd64.tar.gz",
+      "sha256": "f9d13df35783f2eef5ffa2f700f5b980a51909bd87410cc6b6e2f42a1b6cdcf3",
+      "size": 17006921
     }
   ]
 }
