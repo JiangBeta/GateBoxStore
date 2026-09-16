@@ -24,7 +24,7 @@ GateBoxStore/
 │   ├── extension-api.md      # 贡献点 / 权限 / 版本化 参考
 │   └── plugin-ui.md          # 插件 UI（L0/L1）与 postMessage 桥
 ├── variants.yaml             # 核心组件配方变体清单（ADR-038）
-├── index.json                # 生成的静态索引（发布到 GitHub Pages）
+├── index.json                # 生成的静态索引（经 raw.githubusercontent 直链提供）
 └── .github/workflows/        # CI：构建插件 / 构建变体 / 生成索引
 ```
 

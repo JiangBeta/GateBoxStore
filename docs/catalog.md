@@ -102,7 +102,7 @@ CI: build-plugins.yml
    └─ 发布 GitHub Release（tag: <id>/v<version>）
         │
         ▼
-CI: index.yml → gbx-store index → 提交/发布 index.json（GitHub Pages）
+CI: gbx-store index → 提交 index.json（客户端经 raw.githubusercontent 直链拉取）
 ```
 
 - **tag 约定**：插件 `<id>/v<semver>`；变体 `variants/<component>-<version>-<features-hash>`。
@@ -135,7 +135,8 @@ go run ./cmd/gbx-store keygen -out keys      # 生成 keys/catalog.key(私钥) �
 go run ./cmd/gbx-store sign -in index.json    # 生成 index.json.sig
 ```
 
-- 私钥配到 CI Secret `GBX_STORE_KEY`（`pages.yml` 自动签名）；**私钥绝不入库**（`.gitignore` 已忽略 `keys/`、`*.key`）。
+- 私钥配到 CI Secret `GBX_STORE_KEY`（`sign-index.yml` 自动签名并提交 `index.json.sig`）；**私钥绝不入库**（`.gitignore` 已忽略 `keys/`、`*.key`）。
+- 索引默认地址：`https://raw.githubusercontent.com/JiangBeta/GateBoxStore/main/index.json`（签名在 `<地址>.sig`）。
 - 公钥配到 GateBox 的 `catalog_pubkey`（base64）；配置后客户端**强制验签**，签名缺失或错误即拒绝加载索引。
 - 未配置公钥时客户端不验签（开发/内网场景），但仍校验每个制品的 `sha256`。
 - 制品级签名仍预留（`signature` 字段）；当前以索引签名 + `sha256` 为安全边界。
