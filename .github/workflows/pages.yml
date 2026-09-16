@@ -12,6 +12,7 @@ on:
     paths:
       - index.json
       - schema/**
+      - .github/workflows/pages.yml
   workflow_dispatch:
 
 permissions:
@@ -51,6 +52,9 @@ jobs:
             echo "未配置 GBX_STORE_KEY，跳过签名（客户端未配 catalog_pubkey 时仍可用）"
           fi
       - uses: actions/configure-pages@v5
+        with:
+          # 首次运行时自动启用 Pages（Source = GitHub Actions）。
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
