@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tailscale</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #333; }
+      .bar { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+      .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #bbb; margin-right: 6px; vertical-align: middle; }
+      .dot.running { background: #52c41a; }
+      .dot.stopped { background: #d9d9d9; }
+      .dot.needs-login { background: #faad14; }
+      .state { margin-right: auto; font-size: 14px; }
+      button { border: 1px solid #d9d9d9; background: #fff; border-radius: 6px; padding: 4px 12px; cursor: pointer; font-size: 13px; }
+      button.primary { border-color: #1677ff; color: #1677ff; }
+      button:disabled { opacity: .5; cursor: not-allowed; }
+      table { border-collapse: collapse; width: 100%; font-size: 13px; }
+      td { padding: 6px 8px; border-bottom: 1px solid #f0f0f0; }
+      td.k { width: 120px; color: #888; }
+      code { background: #f6f6f6; padding: 1px 5px; border-radius: 4px; }
+      .msg { margin-top: 12px; font-size: 13px; color: #d4380d; white-space: pre-wrap; }
+      .out { margin-top: 12px; font-size: 12px; color: #666; white-space: pre-wrap; max-height: 220px; overflow: auto; }
+    </style>
+  </head>
+  <body>
+    <div class="bar">
+      <span class="state"><span class="dot" id="dot"></span><span id="text">加载中…</span></span>
+      <button id="up" class="primary">连接</button>
+      <button id="down">断开</button>
+      <button id="refresh">刷新</button>
+    </div>
+    <table>
+      <tr><td class="k">版本</td><td id="version">—</td></tr>
+      <tr><td class="k">后端状态</td><td id="backend">—</td></tr>
+      <tr><td class="k">本机地址</td><td id="ips">—</td></tr>
+      <tr><td class="k">DNS 名称</td><td id="dns">—</td></tr>
+    </table>
+    <div class="msg" id="msg"></div>
+    <div class="out" id="out"></div>
+
+    <script>
+      const API = '/api/v1/plugins/tailscale'
+      let token = ''
+
+      async function initToken() {
+        try {
+          const r = await fetch('/api/v1/plugins/tailscale/token')
+          if (r.ok) token = (await r.json()).token || ''
+        } catch {}
+        window.addEventListener('message', (e) => {
+          if (e.data?.type === 'init' && e.data.token) token = e.data.token
+        })
+        window.parent?.postMessage({ type: 'ready' }, '*')
+        window.parent?.postMessage({ type: 'setTitle', title: 'Tailscale' }, '*')
+      }
+
+      async function api(path, method = 'GET') {
+        const r = await fetch(API + path, { method, headers: { 'X-Plugin-Token': token } })
+        const j = await r.json().catch(() => ({}))
+        if (!r.ok) throw new Error(j?.error?.message || `HTTP ${r.status}`)
+        return j
+      }
+
+      function render(st) {
+        const running = st.state === 'running'
+        document.getElementById('dot').className = 'dot ' + st.state
+        document.getElementById('text').textContent =
+          !st.installed ? '未检测到 tailscale' : running ? '已连接' : st.state === 'needs-login' ? '需要登录' : '未连接'
+        document.getElementById('version').innerHTML = st.version ? `<code>${st.version}</code>` : '—'
+        document.getElementById('backend').textContent = st.backendState || '—'
+        document.getElementById('ips').textContent = (st.ips && st.ips.length) ? st.ips.join(', ') : '—'
+        document.getElementById('dns').textContent = st.dnsName || '—'
+        document.getElementById('msg').textContent = st.message || ''
+        document.getElementById('up').disabled = !st.installed || running
+        document.getElementById('down').disabled = !st.installed || !running
+        reportHeight()
+      }
+
+      async function load() {
+        try { render(await api('/status')) } catch (e) { document.getElementById('text').textContent = String(e) }
+      }
+
+      function reportHeight() {
+        window.parent?.postMessage({ type: 'resize', height: document.documentElement.scrollHeight }, '*')
+      }
+
+      async function act(path) {
+        const out = document.getElementById('out')
+        out.textContent = '执行中…'
+        try {
+          const j = await api(path, 'POST')
+          out.textContent = j.output || j.message || '完成'
+        } catch (e) {
+          out.textContent = String(e)
+        }
+        await load()
+      }
+
+      document.getElementById('up').onclick = () => act('/up')
+      document.getElementById('down').onclick = () => act('/down')
+      document.getElementById('refresh').onclick = load
+
+      initToken().then(load)
+    </script>
+  </body>
+</html>

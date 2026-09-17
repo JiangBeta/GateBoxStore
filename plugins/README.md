@@ -22,7 +22,7 @@ plugins/<id>/
 | `caddy-l4` | caddy-module | 核心插件扩展（配方变体） | 清单已建 |
 | `coraza` / `geoip` / `realip` | caddy-module / config-only | 声明式贡献 | 清单已建 |
 | `flame` | process | 导航（sidecar + 内嵌页） | **已迁移** |
-| `tailscale` | — | 组网（attached/system） | 保留核心（不迁） |
+| `tailscale` | process | 组网（attached，系统提供本体） | **已迁移** |
 
 ## 约定
 

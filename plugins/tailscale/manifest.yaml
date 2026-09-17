@@ -1,0 +1,35 @@
+apiVersion: gatebox/v2
+kind: process
+id: tailscale
+name: Tailscale
+version: 0.1.0
+summary: 跨网组网，安全访问内网服务（系统提供，attached）
+tags: [独立进程, 组网]
+channel: official
+publisher:
+  id: jiangbeta
+  name: GateBox
+requires:
+  gatebox: ">=0.4.0"
+  extensionApi: ">=1"
+  os: [linux]
+artifacts:
+  # 仅提供管理侧车；tailscale 本体由系统包管理器提供（attached，GateBox 不搬配方）。
+  - role: sidecar
+    os: linux
+    arch: amd64
+    url: https://github.com/JiangBeta/GateBoxStore/releases/download/tailscale/v0.1.0/tailscale-sidecar-linux-amd64.tar.gz
+  - role: sidecar
+    os: linux
+    arch: arm64
+    url: https://github.com/JiangBeta/GateBoxStore/releases/download/tailscale/v0.1.0/tailscale-sidecar-linux-arm64.tar.gz
+  # 状态/控制页（iframe）。
+  - role: ui
+    format: iframe
+    url: https://github.com/JiangBeta/GateBoxStore/releases/download/tailscale/v0.1.0/tailscale-ui.tar.gz
+contributions:
+  ui:
+    nav:
+      - { path: /plugins/tailscale, label: Tailscale }
+permissions:
+  - filesystem: { write: [tools/tailscale] }
