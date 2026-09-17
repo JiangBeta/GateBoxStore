@@ -1,7 +1,7 @@
 {
   "schema": "gatebox.catalog/v1",
   "extensionApi": 1,
-  "generatedAt": "2026-09-17T00:01:12Z",
+  "generatedAt": "2026-09-17T00:30:18Z",
   "publisher": {
     "id": "jiangbeta",
     "name": "GateBox"
@@ -13,7 +13,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-17T00:01:12Z",
+          "publishedAt": "2026-09-17T00:30:18Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -100,7 +100,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-17T00:01:12Z",
+          "publishedAt": "2026-09-17T00:30:18Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -164,7 +164,7 @@
         {
           "version": "0.1.4",
           "channel": "official",
-          "publishedAt": "2026-09-17T00:01:12Z",
+          "publishedAt": "2026-09-17T00:30:18Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -297,7 +297,7 @@
         {
           "version": "0.1.6",
           "channel": "official",
-          "publishedAt": "2026-09-17T00:01:12Z",
+          "publishedAt": "2026-09-17T00:30:18Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -433,7 +433,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-17T00:01:12Z",
+          "publishedAt": "2026-09-17T00:30:18Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -490,7 +490,7 @@
         {
           "version": "0.1.5",
           "channel": "official",
-          "publishedAt": "2026-09-17T00:01:12Z",
+          "publishedAt": "2026-09-17T00:30:18Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -631,7 +631,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-17T00:01:12Z",
+          "publishedAt": "2026-09-17T00:30:18Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -669,6 +669,110 @@
             ],
             "version": "0.1.0"
           }
+        }
+      ]
+    },
+    {
+      "id": "tailscale",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "channel": "official",
+          "publishedAt": "2026-09-17T00:30:18Z",
+          "extensionApi": 1,
+          "manifest": {
+            "apiVersion": "gatebox/v2",
+            "artifacts": [
+              {
+                "arch": "amd64",
+                "os": "linux",
+                "role": "sidecar",
+                "sha256": "895417289357fc6dfeba42c424071ff0ecfb00598043431989ec86820e05b506",
+                "size": 4925363,
+                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/tailscale/v0.1.0/tailscale-sidecar-linux-amd64.tar.gz"
+              },
+              {
+                "arch": "arm64",
+                "os": "linux",
+                "role": "sidecar",
+                "sha256": "8e2f05a15a38fb6c950896664cc2fda5775ec3603622171bb2496f0287dd4fc9",
+                "size": 4491440,
+                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/tailscale/v0.1.0/tailscale-sidecar-linux-arm64.tar.gz"
+              },
+              {
+                "format": "iframe",
+                "role": "ui",
+                "sha256": "7c090700036c61468edced79cfd19d35e85b45f7d456ce5d43d46e4b19f05f98",
+                "size": 2009,
+                "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/tailscale/v0.1.0/tailscale-ui.tar.gz"
+              }
+            ],
+            "channel": "official",
+            "contributions": {
+              "ui": {
+                "nav": [
+                  {
+                    "label": "Tailscale",
+                    "path": "/plugins/tailscale"
+                  }
+                ]
+              }
+            },
+            "id": "tailscale",
+            "kind": "process",
+            "name": "Tailscale",
+            "permissions": [
+              {
+                "filesystem": {
+                  "write": [
+                    "tools/tailscale"
+                  ]
+                }
+              }
+            ],
+            "publisher": {
+              "id": "jiangbeta",
+              "name": "GateBox"
+            },
+            "requires": {
+              "extensionApi": "\u003e=1",
+              "gatebox": "\u003e=0.4.0",
+              "os": [
+                "linux"
+              ]
+            },
+            "summary": "跨网组网，安全访问内网服务（系统提供，attached）",
+            "tags": [
+              "独立进程",
+              "组网"
+            ],
+            "version": "0.1.0"
+          },
+          "artifacts": [
+            {
+              "arch": "amd64",
+              "os": "linux",
+              "role": "sidecar",
+              "sha256": "895417289357fc6dfeba42c424071ff0ecfb00598043431989ec86820e05b506",
+              "size": 4925363,
+              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/tailscale/v0.1.0/tailscale-sidecar-linux-amd64.tar.gz"
+            },
+            {
+              "arch": "arm64",
+              "os": "linux",
+              "role": "sidecar",
+              "sha256": "8e2f05a15a38fb6c950896664cc2fda5775ec3603622171bb2496f0287dd4fc9",
+              "size": 4491440,
+              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/tailscale/v0.1.0/tailscale-sidecar-linux-arm64.tar.gz"
+            },
+            {
+              "format": "iframe",
+              "role": "ui",
+              "sha256": "7c090700036c61468edced79cfd19d35e85b45f7d456ce5d43d46e4b19f05f98",
+              "size": 2009,
+              "url": "https://github.com/JiangBeta/GateBoxStore/releases/download/tailscale/v0.1.0/tailscale-ui.tar.gz"
+            }
+          ]
         }
       ]
     }
