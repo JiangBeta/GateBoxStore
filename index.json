@@ -1,7 +1,7 @@
 {
   "schema": "gatebox.catalog/v1",
   "extensionApi": 1,
-  "generatedAt": "2026-09-17T00:30:18Z",
+  "generatedAt": "2026-09-17T00:31:15Z",
   "publisher": {
     "id": "jiangbeta",
     "name": "GateBox"
@@ -13,7 +13,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-17T00:30:18Z",
+          "publishedAt": "2026-09-17T00:31:15Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -100,7 +100,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-17T00:30:18Z",
+          "publishedAt": "2026-09-17T00:31:15Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -164,7 +164,7 @@
         {
           "version": "0.1.4",
           "channel": "official",
-          "publishedAt": "2026-09-17T00:30:18Z",
+          "publishedAt": "2026-09-17T00:31:15Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -297,7 +297,7 @@
         {
           "version": "0.1.6",
           "channel": "official",
-          "publishedAt": "2026-09-17T00:30:18Z",
+          "publishedAt": "2026-09-17T00:31:15Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -433,7 +433,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-17T00:30:18Z",
+          "publishedAt": "2026-09-17T00:31:15Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -490,7 +490,7 @@
         {
           "version": "0.1.5",
           "channel": "official",
-          "publishedAt": "2026-09-17T00:30:18Z",
+          "publishedAt": "2026-09-17T00:31:15Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -631,7 +631,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-17T00:30:18Z",
+          "publishedAt": "2026-09-17T00:31:15Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
@@ -678,7 +678,7 @@
         {
           "version": "0.1.0",
           "channel": "official",
-          "publishedAt": "2026-09-17T00:30:18Z",
+          "publishedAt": "2026-09-17T00:31:15Z",
           "extensionApi": 1,
           "manifest": {
             "apiVersion": "gatebox/v2",
