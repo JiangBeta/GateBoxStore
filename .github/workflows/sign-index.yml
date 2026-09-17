@@ -3,8 +3,6 @@ name: sign-index
 # 索引发布：index.json 直接经 raw.githubusercontent 提供（无需 Pages/服务端）。
 # 配置 Secret `GBX_STORE_KEY`（ed25519 私钥 base64）时，本工作流生成 detached 签名
 # index.json.sig 并提交；对应公钥配到 GateBox 的 `catalog_pubkey` 后强制验签。
-#
-# 每次运行都会写 `.github/sign-status.json`（是否检测到密钥/是否签名），便于排查 Secret 配置问题。
 
 on:
   push:
@@ -29,25 +27,21 @@ jobs:
         env:
           GBX_STORE_KEY: ${{ secrets.GBX_STORE_KEY }}
         run: |
-          mkdir -p .github
           if [ -z "$GBX_STORE_KEY" ]; then
-            printf '{"secretPresent":false,"signed":false,"at":"%s","hint":"未检测到 GBX_STORE_KEY：请确认在 Store 仓库的 Actions Secrets（非 Variables/Environment）中创建"}\n' \
-              "$(date -u +%FT%TZ)" > .github/sign-status.json
-            echo "未配置 GBX_STORE_KEY，跳过签名" | tee -a "$GITHUB_STEP_SUMMARY"
-          else
-            printf '%s\n' "$GBX_STORE_KEY" > /tmp/catalog.key
-            go run ./cmd/gbx-store sign -in index.json -key /tmp/catalog.key -out index.json.sig
-            rm -f /tmp/catalog.key
-            printf '{"secretPresent":true,"signed":true,"at":"%s","keyLen":%d}\n' \
-              "$(date -u +%FT%TZ)" "${#GBX_STORE_KEY}" > .github/sign-status.json
-            echo "已签名 index.json 并提交 index.json.sig" | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "### ⚠️ 未配置 GBX_STORE_KEY，已跳过签名" >> "$GITHUB_STEP_SUMMARY"
+            echo "请在 Store 仓库 Actions Secrets（非 Variables/Environment）创建 GBX_STORE_KEY。" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
           fi
+          printf '%s\n' "$GBX_STORE_KEY" > /tmp/catalog.key
+          go run ./cmd/gbx-store sign -in index.json -key /tmp/catalog.key -out index.json.sig
+          rm -f /tmp/catalog.key
+          go run ./cmd/gbx-store verify -in index.json -sig index.json.sig -pub "$(cat catalog.pub 2>/dev/null || echo '')" 2>/dev/null || true
+          echo "### ✅ 已签名 index.json" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: 提交签名与状态
+      - name: 提交签名
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .github/sign-status.json
           [ -f index.json.sig ] && git add index.json.sig
           git diff --staged --quiet || git commit -m "chore(index): 更新索引签名"
           git push
