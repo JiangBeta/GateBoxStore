@@ -1,1 +1,1 @@
-{"secretPresent":false,"signed":false,"at":"2026-09-16T23:41:44Z","hint":"未检测到 GBX_STORE_KEY：请确认在 Store 仓库的 Actions Secrets（非 Variables/Environment）中创建"}
+{"secretPresent":true,"signed":true,"at":"2026-09-17T00:01:27Z","keyLen":88}
